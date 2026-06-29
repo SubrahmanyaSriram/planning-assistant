@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Planning Assistant - Quarterly Planning with LLM Sources</title>
+<style>
+  :root{
+    --bg:#f4f7fb;
+    --surface:#ffffff;
+    --surface-2:#f8fafc;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#dbe3ee;
+    --primary:#0f4c81;
+    --primary-2:#1369b3;
+    --success:#15803d;
+    --warning:#b45309;
+    --danger:#b91c1c;
+    --radius:12px;
+    --shadow:0 1px 2px rgba(2,8,23,.08),0 6px 16px rgba(2,8,23,.05);
+    --font:"Segoe UI", "Calibri", "Trebuchet MS", Arial, sans-serif;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:linear-gradient(180deg,#e9f1fb 0%, #f4f7fb 220px, #f4f7fb 100%);font-family:var(--font);color:var(--text);font-size:14px}
+
+  .top{background:linear-gradient(135deg,#072944,#0f4c81 58%, #1369b3 100%);color:#eaf4ff;border-bottom:1px solid rgba(255,255,255,.15);padding:18px 22px}
+  .top h1{margin:0;font-size:22px;letter-spacing:.2px}
+  .top p{margin:6px 0 0;color:#c7defa;font-size:13px}
+
+  .container{max-width:1600px;margin:0 auto;padding:18px}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card + .card{margin-top:14px}
+  .card-h{padding:13px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;background:linear-gradient(180deg,#fff,#fdfefe)}
+  .card-h h2,.card-h h3{margin:0;font-size:15px}
+  .card-h p{margin:4px 0 0;color:var(--muted);font-size:12px}
+  .card-b{padding:14px 16px}
+
+  .grid{display:grid;gap:12px}
+  .grid.g4{grid-template-columns:repeat(4,1fr)}
+  .grid.g3{grid-template-columns:repeat(3,1fr)}
+  .grid.g2{grid-template-columns:repeat(2,1fr)}
+  @media (max-width:1200px){.grid.g4,.grid.g3{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:780px){.grid.g4,.grid.g3,.grid.g2{grid-template-columns:1fr}}
+
+  .field label{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
+  .field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:#fff;font-size:13px;color:var(--text);font-family:inherit}
+  .field textarea{resize:vertical;min-height:74px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary-2);box-shadow:0 0 0 3px rgba(19,105,179,.12)}
+
+  .btn{border:1px solid var(--primary);background:var(--primary);color:#fff;padding:8px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+  .btn:hover{background:#0b3f6d;border-color:#0b3f6d}
+  .btn.ghost{background:#fff;color:var(--text);border-color:var(--border)}
+  .btn.ghost:hover{background:var(--surface-2)}
+  .btn.success{background:var(--success);border-color:var(--success)}
+  .btn.success:hover{background:#127a3f;border-color:#127a3f}
+  .btn.warning{background:var(--warning);border-color:var(--warning)}
+  .btn.warning:hover{background:#92400e;border-color:#92400e}
+  .btn.small{padding:5px 9px;font-size:12px}
+
+  .pills{display:flex;gap:7px;flex-wrap:wrap}
+  .pill{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#e2e8f0;color:#334155}
+  .pill.blue{background:#dbeafe;color:#1e3a8a}
+  .pill.green{background:#dcfce7;color:#14532d}
+  .pill.amber{background:#fef3c7;color:#78350f}
+  .pill.red{background:#fee2e2;color:#7f1d1d}
+  .pill.purple{background:#ede9fe;color:#4c1d95}
+
+  .kpi{padding:12px;border:1px dashed #d3e0ef;border-radius:10px;background:#fbfdff}
+  .kpi .t{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .kpi .v{font-size:24px;font-weight:700;margin-top:3px}
+  .kpi .s{font-size:12px;color:var(--muted)}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:12px}
+  .tile{border:2px solid var(--border);border-radius:10px;padding:14px;background:#fff;cursor:pointer;transition:all 0.2s}
+  .tile:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(15,76,129,.12)}
+  .tile.active{border-color:var(--primary);background:#f0f8ff}
+  .tile .head{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;font-size:13px}
+  .tile .icon{font-size:20px}
+  .tile .status{font-size:11px;color:var(--muted);margin-top:4px}
+  .tile .detail{font-size:12px;color:var(--text);margin-top:6px;line-height:1.4}
+
+  .approval-gate{border:2px solid var(--warning);border-radius:10px;padding:12px;background:#fffbf0;margin:12px 0}
+  .approval-gate strong{display:block;color:var(--warning);margin-bottom:8px}
+  .approval-gate .btns{display:flex;gap:8px;margin-top:8px}
+  .approval-gate .btns .btn{flex:1}
+
+  .stepper{display:flex;gap:8px;flex-wrap:wrap}
+  .step{padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#fff;font-size:12px;color:#334155}
+  .step.done{background:#dcfce7;border-color:#86efac;color:#14532d}
+  .step.current{background:#dbeafe;border-color:#93c5fd;color:#1e3a8a}
+
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:9px 11px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:middle}
+  th{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;background:#f8fbff}
+  tr:hover td{background:#fafcff}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+
+  .prog{display:flex;align-items:center;gap:8px;min-width:150px}
+  .prog .bar{flex:1;height:6px;background:#e2e8f0;border-radius:999px;overflow:hidden}
+  .prog .fill{height:100%;display:block;background:var(--primary-2)}
+  .prog .fill.green{background:var(--success)}
+  .prog .fill.amber{background:var(--warning)}
+  .prog .fill.red{background:var(--danger)}
+  .prog .pct{font-size:12px;color:var(--muted);font-weight:700;min-width:38px;text-align:right}
+
+  .notice{padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:10px;font-size:12px}
+  .danger-note{padding:10px 12px;border:1px solid #fecaca;background:#fef2f2;color:#991b1b;border-radius:10px;font-size:12px}
+  .footer-note{margin-top:10px;color:#475569;font-size:12px}
+  
+  .modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,.4)}
+  .modal.show{display:flex;align-items:center;justify-content:center}
+  .modal-content{background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.2);max-width:600px;max-height:80vh;overflow-y:auto;padding:20px}
+  .modal-content h2,.modal-content h3{margin-top:0;color:var(--text)}
+
+  /* ── Tab navigation ── */
+  .tab-nav{background:#fff;border-bottom:2px solid var(--border);display:flex;gap:0;padding:0 22px;position:sticky;top:0;z-index:90;box-shadow:0 2px 8px rgba(2,8,23,.06)}
+  .tab-btn{padding:13px 18px;border:none;background:none;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:6px;transition:all .15s}
+  .tab-btn:hover{color:var(--primary);background:#f8fafc}
+  .tab-btn.active{color:var(--primary);border-bottom-color:var(--primary);background:none}
+  .tab-pane{display:none}
+  .tab-pane.active{display:block}
+
+  /* ── 9-step workflow ── */
+  .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+  .wf-step{background:linear-gradient(135deg,#f5f8ff,#edf2fb);border-left:4px solid var(--primary);border-radius:10px;padding:16px;transition:all .2s}
+  .wf-step:hover{box-shadow:0 4px 14px rgba(15,76,129,.12);border-left-color:var(--primary-2)}
+  .wf-step-num{background:var(--primary);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;margin-bottom:10px}
+  .wf-step-title{font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px}
+  .wf-step-desc{font-size:12px;color:var(--muted);line-height:1.5}
+  .wf-step-owner{margin-top:10px;padding-top:10px;border-top:1px solid #dde6f5;font-size:11px;color:#94a3b8}
+
+  /* ── Allocation bar ── */
+  .alloc-bar{display:flex;height:52px;border-radius:8px;overflow:hidden;box-shadow:inset 0 2px 4px rgba(0,0,0,.08);margin:14px 0}
+  .alloc-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;transition:flex .3s}
+  .seg-cm{background:linear-gradient(135deg,#0f4c81,#1369b3);flex:28}
+  .seg-qa{background:linear-gradient(135deg,#7c3aed,#a78bfa);flex:5}
+  .seg-disc{background:linear-gradient(135deg,#0ea5e9,#38bdf8);flex:67}
+
+  /* ── Timeline ── */
+  .tl-wrap{position:relative;padding:28px 0 10px}
+  .tl-line{position:absolute;top:36px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary-2),#7c3aed)}
+  .tl-items{display:flex;justify-content:space-between;position:relative;z-index:1}
+  .tl-item{flex:1;text-align:center;padding:0 8px}
+  .tl-dot{width:18px;height:18px;background:#fff;border:4px solid var(--primary);border-radius:50%;margin:0 auto 10px;transition:all .2s}
+  .tl-item:hover .tl-dot{transform:scale(1.3);box-shadow:0 0 12px rgba(15,76,129,.3)}
+  .tl-label{font-size:12px;font-weight:600;color:var(--text)}
+  .tl-phase{font-size:11px;color:var(--muted);margin-top:3px}
+
+  /* ── 9-Step Progress Indicator ── */
+  .step-indicator{background:#fff;border-bottom:2px solid var(--border);padding:16px 22px;margin-bottom:0}
+  .step-indicator h3{margin:0 0 12px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .step-progress{display:flex;align-items:center;gap:8px;justify-content:space-between;position:relative;padding:0 0 12px}
+  .step-progress::before{content:'';position:absolute;top:18px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary) 0%, var(--primary) calc(11.11%*var(--current-step)), #e2e8f0 calc(11.11%*var(--current-step)), #e2e8f0 100%);z-index:0}
+  .step-dot{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid #e2e8f0;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s;z-index:1;position:relative;flex-shrink:0}
+  .step-dot.done{background:var(--success);border-color:var(--success);color:#fff}
+  .step-dot.current{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 12px rgba(15,76,129,.3)}
+  .step-dot.upcoming{background:#fff;border-color:#e2e8f0;color:var(--muted)}
+  .step-dot:hover{border-color:var(--primary)}
+  .step-label{font-size:10px;color:var(--muted);text-align:center;margin-top:6px;line-height:1.3;min-width:50px}
+  .step-dot.done ~ .step-label{color:var(--success);font-weight:600}
+  .step-dot.current ~ .step-label{color:var(--primary);font-weight:600}
+  .step-section{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;flex:1}
+
+  .workflow-shell{margin:18px 22px 0;background:linear-gradient(135deg,#f8fbff,#eef5ff);border:1px solid #d8e6f5;border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(15,76,129,.08)}
+  .workflow-steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .workflow-step-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid #c9d9eb;background:#fff;color:#334155;border-radius:999px;font-weight:700;font-size:12px;cursor:pointer;transition:all .2s}
+  .workflow-step-btn:hover{border-color:var(--primary);box-shadow:0 4px 12px rgba(15,76,129,.08)}
+  .workflow-step-btn .step-badge{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:#eaf3ff;color:#0f4c81;font-size:12px}
+  .workflow-step-btn.active{background:linear-gradient(135deg,#0f4c81,#1369b3);color:#fff;border-color:#0f4c81;box-shadow:0 8px 20px rgba(15,76,129,.2)}
+  .workflow-step-btn.active .step-badge{background:rgba(255,255,255,.2);color:#fff}
+  .workflow-arrow{color:#94a3b8;font-size:12px;font-weight:700}
+  .workflow-detail-card{margin-top:14px;border:1px solid #dce8f6;background:#fff;border-radius:12px;padding:14px}
+  .workflow-detail{display:none}
+  .workflow-detail.active{display:block}
+  .workflow-detail h3{margin:0 0 6px;font-size:15px}
+  .workflow-detail p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.5}
+  .workflow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .workflow-panel{border:1px solid #e2e8f0;border-radius:10px;padding:12px;background:#f8fbff}
+  .workflow-panel h4{margin:0 0 8px;font-size:13px}
+  .workflow-panel ul{margin:8px 0 0 16px;padding:0;display:grid;gap:6px}
+  .workflow-panel li{font-size:12px;color:#334155}
+  .carry-list{margin:8px 0 0 0;padding-left:18px;display:grid;gap:6px}
+  .carry-list li{font-size:12px;color:#334155;line-height:1.5;list-style:disc}
+  .workflow-table{width:100%;border-collapse:collapse;margin-top:8px}
+  .workflow-table th,.workflow-table td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px}
+  .workflow-table th{background:#f1f5f9;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .workflow-table input[type=number]{width:72px;padding:6px 8px;border:1px solid var(--border);border-radius:8px}
+  .workflow-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
+  .workflow-kpi{padding:10px;border-radius:10px;background:#f8fbff;border:1px solid #e2e8f0}
+  .workflow-kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .workflow-kpi .value{font-size:18px;font-weight:700;margin-top:3px}
+  .workflow-progress{height:10px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin-top:8px}
+  .workflow-progress .fill{display:block;height:100%;background:var(--primary-2)}
+  .workflow-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .workflow-badge{display:inline-flex;padding:3px 8px;border-radius:999px;background:#e2e8f0;color:#334155;font-size:11px;font-weight:700}
+  .workflow-badge.blue{background:#dbeafe;color:#1e3a8a}
+  .workflow-badge.green{background:#dcfce7;color:#14532d}
+  .workflow-badge.amber{background:#fef3c7;color:#78350f}
+  .workflow-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:16px}
+  .workflow-nav-single{justify-content:flex-end}
+  .workflow-nav .workflow-nav-btn{min-width:96px}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Planning Assistant</h1>
+  <p>Track your progress from intake through reporting</p>
+</header>
+
+<div class="card" style="margin:14px 22px 0;padding:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow)">
+  <div class="field" style="margin:0;min-width:130px"><label for="prId" style="margin-bottom:3px">PR ID</label><input id="prId" value="PR174210" style="padding:6px 8px"/></div>
+  <div class="field" style="margin:0;min-width:130px"><label for="quarter" style="margin-bottom:3px">Quarter</label><select id="quarter" style="padding:6px 8px"><option>Q1</option><option selected>Q2</option><option>Q3</option><option>Q4</option></select></div>
+  <div class="field" style="margin:0;min-width:130px"><label for="fy" style="margin-bottom:3px">Fiscal Year</label><select id="fy" style="padding:6px 8px"><option>FY 2025</option><option selected>FY 2026</option><option>FY 2027</option></select></div>
+  <button class="btn" id="applyContext" style="margin-top:16px">Apply</button>
+  <span class="footer-note" id="ctxLabel" style="margin:0;margin-top:16px">PR174210 · Q2 · FY 2026</span>
+</div>
+
+<div class="workflow-shell" role="region" aria-label="Quarterly planning workflow">
+  <div class="workflow-steps">
+    <button type="button" class="workflow-step-btn active" data-workflow-step="1"><span class="step-badge">1</span><span>Work intake</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="2"><span class="step-badge">2</span><span>High level sizing</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="3"><span class="step-badge">3</span><span>Capacity check</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="4"><span class="step-badge">4</span><span>Allocation</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="5"><span class="step-badge">5</span><span>Low level sizing</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="6"><span class="step-badge">6</span><span>Prioritization</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="7"><span class="step-badge">7</span><span>Create epics &amp; stories</span></button>
+    <span class="workflow-arrow">→</span>
+    <button type="button" class="workflow-step-btn" data-workflow-step="8"><span class="step-badge">8</span><span>Reporting</span></button>
+  </div>
+
+  <div class="workflow-detail-card">
+    <div class="workflow-detail active" data-workflow-detail="1">
+      <h3>1. Work Intake</h3>
+      <p>Capture the planning inputs needed for the next phases: carry-over work, team velocity, unavailable time, and allocation targets.</p>
+      <div class="workflow-grid">
+        <div class="workflow-panel">
+          <h4>Carry over stories and epics</h4>
+          <ul id="carryOverList" class="carry-list">
+            <li>Epic: Customer intake reconciliation</li>
+            <li>Story: Remaining logging cleanup</li>
+            <li>Epic: Cross-team dependency stabilization</li>
+          </ul>
+        </div>
+        <div class="workflow-panel">
+          <h4>Quarterly velocity by team</h4>
+          <div style="margin-top:8px;font-size:12px;color:var(--muted)">Sprints this quarter: <strong id="sprintCountValue">6.5</strong> (2-week sprints)</div>
+          <div class="workflow-grid" style="grid-template-columns:1fr;gap:10px;margin-top:12px">
+            <div class="field"><label>Indus</label><input class="team-velocity-input" data-team="Indus" type="number" value="19" /></div>
+            <div class="field"><label>Sindhu</label><input class="team-velocity-input" data-team="Sindhu" type="number" value="20" /></div>
+            <div class="field"><label>Corrib</label><input class="team-velocity-input" data-team="Corrib" type="number" value="18" /></div>
+            <div class="field"><label>Hudson</label><input class="team-velocity-input" data-team="Hudson" type="number" value="17" /></div>
+            <div class="field"><label>Niagara</label><input class="team-velocity-input" data-team="Niagara" type="number" value="21" /></div>
+            <div class="field"><label>Potomac</label><input class="team-velocity-input" data-team="Potomac" type="number" value="16" /></div>
+            <div class="field"><label>Shannon</label><input class="team-velocity-input" data-team="Shannon" type="number" value="18" /></div>
+          </div>
+          <div class="capacity-summary" style="margin-top:12px">
+            <h5 style="margin:0 0 8px;font-size:13px;color:var(--text)">Quarterly capacity</h5>
+            <div id="teamCapacitySummary" style="display:grid;gap:8px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-grid" style="margin-top:12px">
+        <div class="workflow-panel">
+          <h4>Unavailable time</h4>
+          <div class="workflow-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px">
+            <div class="field"><label>Org holidays (days)</label><input type="number" value="6" /></div>
+            <div class="field"><label>L&amp;D time (days)</label><input type="number" value="2" /></div>
+            <div class="field"><label>PTO across PR (days)</label><input type="number" value="2" /></div>
+            <div class="field"><label>Other unavailability</label><input type="number" value="0" /></div>
+          </div>
+        </div>
+        <div class="workflow-panel">
+          <h4>Allocation targets</h4>
+          <div class="workflow-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px">
+            <div class="field"><label>Discretionary %</label><input type="number" value="67" /></div>
+            <div class="field"><label>Non-discretionary %</label><input type="number" value="33" /></div>
+            <div class="field"><label>C&amp;M %</label><input type="number" value="28" /></div>
+            <div class="field"><label>Quality %</label><input type="number" value="5" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-nav workflow-nav-single">
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="2">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="2">
+      <h3>2. High level sizing</h3>
+      <p>Each epic and story is sized at a high level, and the story point values can be updated before the plan is finalized.</p>
+      <div class="workflow-panel">
+        <table class="workflow-table">
+          <thead><tr><th>Work item</th><th>Type</th><th>Story points</th></tr></thead>
+          <tbody>
+            <tr><td>EPIC-101 – Customer onboarding</td><td>Epic</td><td><input class="story-point-input" type="number" value="34" /></td></tr>
+            <tr><td>STORY-214 – Billing exception workflow</td><td>Story</td><td><input class="story-point-input" type="number" value="13" /></td></tr>
+            <tr><td>STORY-218 – Support handoff improvements</td><td>Story</td><td><input class="story-point-input" type="number" value="8" /></td></tr>
+          </tbody>
+        </table>
+        <div class="workflow-badges"><span class="workflow-badge blue">Total planned points</span><span class="workflow-badge green" id="workflowStoryPointTotal">55</span></div>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="1">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="3">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="3">
+      <h3>3. Capacity check</h3>
+      <p>Use the quarterly velocity and subtract unavailable time to calculate the net capacity available for the quarter.</p>
+      <div class="workflow-grid">
+        <div class="workflow-panel">
+          <h4>Quarterly velocity</h4>
+          <div class="workflow-kpis">
+            <div class="workflow-kpi"><div class="label">Velocity / squad / sprint</div><div class="value">19</div></div>
+            <div class="workflow-kpi"><div class="label">Sprints in quarter</div><div class="value">4</div></div>
+            <div class="workflow-kpi"><div class="label">Quarter capacity</div><div class="value">76 pts</div></div>
+          </div>
+        </div>
+        <div class="workflow-panel">
+          <h4>Unavailable time</h4>
+          <ul>
+            <li>Org holidays: 6 days</li>
+            <li>L&amp;D time: 2 days</li>
+            <li>PTO across the PR: 2 days</li>
+          </ul>
+          <div class="workflow-badges"><span class="workflow-badge amber">Net available time</span><span class="workflow-badge green">10 days removed</span></div>
+        </div>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="2">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="4">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="4">
+      <h3>4. Allocation</h3>
+      <p>Split the available capacity between discretionary and non-discretionary work, with the non-discretionary split tied to C&amp;M and Quality.</p>
+      <div class="workflow-panel">
+        <div class="alloc-bar">
+          <div class="alloc-seg seg-cm">C&amp;M 28%</div>
+          <div class="alloc-seg seg-qa">QA 5%</div>
+          <div class="alloc-seg seg-disc">Discretionary 67%</div>
+        </div>
+        <div class="workflow-badges"><span class="workflow-badge blue">Non-discretionary 33%</span><span class="workflow-badge green">Discretionary 67%</span></div>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="3">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="5">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="5">
+      <h3>5. Low level design</h3>
+      <p>Tech leads review the proposed work items, identify dependencies, and shape the implementation approach before execution.</p>
+      <div class="workflow-grid">
+        <div class="workflow-panel">
+          <h4>Design review focus</h4>
+          <ul>
+            <li>Architecture impact and integrations</li>
+            <li>Dependencies on platform services</li>
+            <li>Testing and rollout approach</li>
+          </ul>
+        </div>
+        <div class="workflow-panel">
+          <h4>Owners involved</h4>
+          <ul>
+            <li>Tech lead for customer onboarding</li>
+            <li>Solutions architect for support flow</li>
+            <li>QA lead for platform validation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="4">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="6">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="6">
+      <h3>6. Prioritization of epics and stories</h3>
+      <p>Leadership reviews the final candidate work and ranks it based on business value, risk, and fit within the quarter’s capacity.</p>
+      <div class="workflow-panel">
+        <table class="workflow-table">
+          <thead><tr><th>Work item</th><th>Priority</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>Customer onboarding modernization</td><td>P0</td><td>High customer impact</td></tr>
+            <tr><td>Billing exception workflow</td><td>P1</td><td>Compliance critical</td></tr>
+            <tr><td>Support handoff improvements</td><td>P2</td><td>Customer experience uplift</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="5">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="7">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="7">
+      <h3>7. Creation of epics and stories</h3>
+      <p>Once prioritized, the work is broken into epics and stories and assigned based on application accountability.</p>
+      <div class="workflow-panel">
+        <table class="workflow-table">
+          <thead><tr><th>Work item</th><th>Application accountability</th><th>Assignee</th><th>Squad</th></tr></thead>
+          <tbody>
+            <tr><td>EPIC-101</td><td>Customer experience</td><td>Asha</td><td>Indus</td></tr>
+            <tr><td>STORY-214</td><td>Finance operations</td><td>Rakesh</td><td>Sindhu</td></tr>
+            <tr><td>STORY-218</td><td>Support experience</td><td>Nina</td><td>Indus</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="6">Back</button>
+        <button type="button" class="btn workflow-nav-btn" data-nav-step="8">Next</button>
+      </div>
+    </div>
+
+    <div class="workflow-detail" data-workflow-detail="8">
+      <h3>8. Reporting</h3>
+      <p>The final report captures carry overs, new work items, story points, capacity, allocation, and the squad-level execution view.</p>
+      <div class="workflow-grid">
+        <div class="workflow-panel">
+          <h4>Summary</h4>
+          <div class="workflow-kpis">
+            <div class="workflow-kpi"><div class="label">Carry overs</div><div class="value">3</div></div>
+            <div class="workflow-kpi"><div class="label">New items</div><div class="value">5</div></div>
+            <div class="workflow-kpi"><div class="label">Total points</div><div class="value">76</div></div>
+          </div>
+        </div>
+        <div class="workflow-panel">
+          <h4>Delivery view</h4>
+          <ul>
+            <li>Squad, assignee, and story points visible per work item</li>
+            <li>Overall capacity and total allocation reported together</li>
+            <li>Two-grain view: epic and story-level detail</li>
+          </ul>
+        </div>
+      </div>
+      <div class="workflow-nav">
+        <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="7">Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- main.container removed -->
+
+
+<script>
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+
+function badge(text, tone){ return '<span class="pill '+tone+'">'+text+'</span>'; }
+function progress(pct){
+  const tone = pct>=90 ? 'green' : pct>=70 ? '' : pct>=50 ? 'amber' : 'red';
+  return '<div class="prog"><div class="bar"><span class="fill '+tone+'" style="width:'+Math.max(0,Math.min(100,pct))+'%"></span></div><span class="pct">'+pct+'%</span></div>';
+}
+
+/* ── Tab switching ── */
+$$('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    $$('.tab-btn').forEach(b=>b.classList.remove('active'));
+    $$('.tab-pane').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    const tabName = btn.dataset.tab;
+    $('#tab-'+tabName).classList.add('active');
+    updateStepProgress(tabName);
+  });
+});
+
+/* Click step dots to navigate */
+$$('.step-section').forEach(section=>{
+  section.addEventListener('click', ()=>{
+    const stepNum = parseInt(section.dataset.step);
+    let targetTab = 'overview';
+    if(stepNum <= 3) targetTab = 'overview';
+    else if(stepNum <= 5) targetTab = 'capacity';
+    else if(stepNum === 8) targetTab = 'dashboard';
+    else targetTab = 'overview';
+
+    const btn = $('[data-tab="'+targetTab+'"]');
+    if(btn) btn.click();
+  });
+});
+
+/* ── Data ── */
+const squads = {
+  "Indus": {
+    productArea: "Indus Product Area",
+    board: "INDUS",
+    teamAvgVelocity: 19,
+    people: [
+      {name:"Subrahmanya", role:"Lead Engineer", holidays:2, velocity:21, capacity:28},
+      {name:"Sahajanya", role:"Senior Engineer", holidays:2, velocity:19, capacity:25},
+      {name:"Prasad", role:"Engineer", holidays:1, velocity:17, capacity:23},
+      {name:"Varun", role:"Engineer", holidays:2, velocity:18, capacity:24},
+      {name:"Vinod", role:"Tech Lead", holidays:1, velocity:20, capacity:27},
+      {name:"Harshada", role:"Engineer", holidays:2, velocity:16, capacity:21}
+    ]
+  },
+  "Sindhu": {
+    productArea: "Sindhu Product Area",
+    board: "SINDHU",
+    teamAvgVelocity: 20,
+    people: [
+      {name:"Anika", role:"Lead Engineer", holidays:1, velocity:22, capacity:29},
+      {name:"Rohit", role:"Senior Engineer", holidays:2, velocity:20, capacity:26},
+      {name:"Meera", role:"Engineer", holidays:2, velocity:18, capacity:24},
+      {name:"Karthik", role:"Engineer", holidays:1, velocity:19, capacity:25},
+      {name:"Ishaan", role:"Tech Lead", holidays:1, velocity:21, capacity:28},
+      {name:"Diya", role:"Engineer", holidays:2, velocity:17, capacity:22}
+    ]
+  }
+};
+
+const state = {
+  sources: [
+    {
+      id: 1,
+      name: 'Functional Stories',
+      type: 'Jira',
+      icon: '📋',
+      items: 5,
+      status: 'pending',
+      category: 'discretionary',
+      itemList: [
+        'Customer onboarding workflow improvements',
+        'Model monitoring alert tuning',
+        'Search relevance ranking updates',
+        'Feature toggle automation',
+        'Reporting API performance optimization'
+      ],
+      detail: 'Discretionary functional stories identified for this quarter.'
+    },
+    {
+      id: 2,
+      name: 'SNOW EOLs',
+      type: 'ServiceNow',
+      icon: '🔧',
+      items: 5,
+      status: 'pending',
+      category: 'non-discretionary',
+      itemList: [
+        'Upgrade OpenSSL dependency to supported version',
+        'Retire end-of-life Java runtime in service A',
+        'Replace deprecated authentication library',
+        'Patch unsupported Linux base image in containers',
+        'Migrate legacy API gateway plugin to supported release'
+      ],
+      detail: 'End-of-life and compliance remediation findings from SNOW.'
+    },
+    {
+      id: 3,
+      name: 'Github Scan',
+      type: 'GitHub',
+      icon: '🔐',
+      items: 5,
+      status: 'pending',
+      category: 'non-discretionary',
+      itemList: [
+        'Rotate exposed access token from repository history',
+        'Resolve critical CVE in transitive dependency chain',
+        'Enable branch protection for security-sensitive repos',
+        'Add secret-scanning baseline to CI pipeline',
+        'Fix high-severity code scanning issue in auth module'
+      ],
+      detail: 'Security and dependency scan findings sourced from GitHub.'
+    }
+  ],
+  proposedItems: [
+    {item:'Dashboard v2 Rollout', source:'Jira', type:'Epic', pts:34, conf:0.95, action:'approve'},
+    {item:'API Rate Limiting', source:'Jira', type:'Feature', pts:13, conf:0.87, action:'pending'},
+    {item:'PII Data Redaction', source:'ServiceNow', type:'Epic', pts:21, conf:0.92, action:'approve'},
+    {item:'Emergency Incident Response', source:'ServiceNow', type:'Feature', pts:8, conf:0.79, action:'pending'},
+    {item:'Token Leak Remediation', source:'GitHub', type:'Feature', pts:5, conf:0.88, action:'pending'},
+    {item:'Dependency Version Upgrade', source:'GitHub', type:'Feature', pts:3, conf:0.71, action:'pending'}
+  ],
+  selectedTeam: 'Indus',
+  capacityPeople: [],
+  currentSourceId: null,
+  carryOvers: [
+    'Epic: Customer intake reconciliation',
+    'Story: Remaining logging cleanup',
+    'Epic: Cross-team dependency stabilization'
+  ]
+};
+
+const quarterWeeks = { Q1: 13, Q2: 13, Q3: 13, Q4: 13 };
+function getSprintCount(quarter){ return (quarterWeeks[quarter] || 13) / 2; }
+function formatSprintCount(count){ return Number.isInteger(count) ? count : count.toFixed(1); }
+function renderCarryOverList(){ const list = $('#carryOverList'); if(!list) return; list.innerHTML = state.carryOvers.map(item=>' <li>'+item+'</li>').join(''); }
+function renderWorkIntakeCapacity(){ const sprintCount = getSprintCount($('#quarter').value); const summary = $('#teamCapacitySummary'); if(!summary) return; const rows = Array.from($$('.team-velocity-input')).map(input=>{ const team = input.dataset.team; const velocity = Number(input.value)||0; const capacity = Math.round(velocity * sprintCount); return {team,capacity}; }); summary.innerHTML = rows.map(row=>'<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px"><span>'+row.team+'</span><span>'+row.capacity+' pts</span></div>').join(''); $('#sprintCountValue').textContent = formatSprintCount(sprintCount); }
+function renderWorkIntakeSummary(){ renderCarryOverList(); renderWorkIntakeCapacity(); }
+
+/* ── Context ── */
+function setTeamOptions(){
+  const sel = $('#squad');
+  sel.innerHTML = Object.keys(squads).map(name=>'<option>'+name+'</option>').join('');
+}
+
+function updateContextLabel(){
+  const pr = $('#prId').value;
+  const q = $('#quarter').value;
+  const fy = $('#fy').value;
+  const lbl = pr+' · '+q+' · '+fy;
+  $('#ctxLabel').textContent = lbl;
+  if($('#overviewBadge')) $('#overviewBadge').textContent = lbl;
+  if($('#ovTeams')) $('#ovTeams').textContent = String(Object.keys(squads).length);
+  renderWorkIntakeCapacity();
+}
+
+function refreshTeamData(){
+  state.selectedTeam = $('#squad').value;
+  const team = squads[state.selectedTeam];
+  state.capacityPeople = team.people.map(p=>({...p, velocity: team.teamAvgVelocity}));
+  renderTeamCapacityTable();
+  renderCapacity();
+  renderAllocation();
+  renderQuarterlyDash();
+}
+
+/* ── Sources (Tab 2) ── */
+function renderSources(){
+  const html = state.sources.map(src=>'<div class="tile '+(src.status==='approved'?'active':'')+'" onclick="selectSource('+src.id+')"><div class="head"><div class="icon">'+src.icon+'</div><div>'+src.name+'</div></div><div class="status">'+src.items+' items · '+src.status+'</div><div style="margin-top:6px"><span class="pill">'+src.type+'</span></div></div>').join('');
+  $('#sourceTiles').innerHTML = html;
+
+  const discretionary = state.sources.filter(s=>s.category==='discretionary');
+  const nondiscretionary = state.sources.filter(s=>s.category==='non-discretionary');
+
+  $('#discretionaryTiles').innerHTML = discretionary.map(src=>
+    '<div class="tile '+(src.status==='approved'?'active':'')+'" onclick="selectSource('+src.id+')">'+
+    '<div class="head"><div class="icon">'+src.icon+'</div><div>'+src.name+'</div></div>'+ 
+    '<div class="status">'+src.items+' items · '+src.status+'</div>'+ 
+    '<div style="margin-top:6px"><span class="pill">'+src.type+'</span></div></div>'
+  ).join('');
+
+  $('#nonDiscretionaryTiles').innerHTML = nondiscretionary.map(src=>
+    '<div class="tile '+(src.status==='approved'?'active':'')+'" onclick="selectSource('+src.id+')">'+
+    '<div class="head"><div class="icon">'+src.icon+'</div><div>'+src.name+'</div></div>'+ 
+    '<div class="status">'+src.items+' items · '+src.status+'</div>'+ 
+    '<div style="margin-top:6px"><span class="pill">'+src.type+'</span></div></div>'
+  ).join('');
+}
+
+function selectSource(id){
+  const src = state.sources.find(s=>s.id===id);
+  if(!src) return;
+  state.currentSourceId = id;
+  $('#detailTitle').textContent = src.name + ' — Details';
+  const listHtml = (src.itemList||[]).map((item, idx)=>'<li>'+(idx+1)+'. '+item+'</li>').join('');
+  $('#detailContent').innerHTML =
+    '<strong>Type:</strong> '+src.type+'<br/>'+
+    '<strong>Items:</strong> '+src.items+'<br/>'+
+    '<strong>Description:</strong> '+src.detail+'<br/><br/>'+
+    '<strong>Extracted Items</strong><ol style="margin:8px 0 0 18px">'+listHtml+'</ol>';
+  $('#sourceDetail').style.display = 'block';
+  $('#confirmSourceBtn').onclick = ()=>{ src.status='approved'; renderSources(); $('#sourceDetail').style.display='none'; renderProposed(); alert('✓ Source items confirmed and merged.'); };
+  $('#editSourceBtn').onclick  = ()=>{
+    const current = (src.itemList||[]).join('\n');
+    const updated = window.prompt('Edit items (one item per line):', current);
+    if(updated===null) return;
+    const edited = updated.split('\n').map(x=>x.trim()).filter(Boolean);
+    if(edited.length===0){ alert('No items provided.'); return; }
+    src.itemList = edited;
+    src.items = edited.length;
+    src.status = 'edited';
+    selectSource(src.id);
+    renderSources();
+  };
+}
+
+function renderProposed(){
+  $('#proposedTable tbody').innerHTML = state.proposedItems.map(p=>'<tr><td>'+p.item+'</td><td>'+p.source+'</td><td>'+badge(p.type,p.type==='Epic'?'purple':'blue')+'</td><td class="num">'+p.pts+'</td><td class="num">'+Math.round(p.conf*100)+'%</td><td><button class="btn small '+(p.action==='pending'?'ghost':'')+'" onclick="toggleItem(\''+p.item+'\')">'+p.action+'</button></td></tr>').join('');
+}
+
+function toggleItem(item){
+  const p = state.proposedItems.find(p=>p.item===item);
+  if(!p) return;
+  p.action = p.action==='pending' ? 'approve' : 'pending';
+  renderProposed();
+  renderQuarterlyDash();
+}
+
+/* ── Capacity (Tab 3) ── */
+function getTeamCapacityStats(teamName){
+  const people = squads[teamName].people;
+  const raw = people.reduce((s,p)=>s+p.capacity,0);
+  const holidayDays = people.reduce((s,p)=>s+p.holidays,0);
+  const holidayPts = Math.round(holidayDays*1.5);
+  const net = Math.round((raw-holidayPts)*0.9);
+  return {members:people.length, raw, holidayPts, net};
+}
+
+function renderTeamCapacityTable(){
+  const tbody = $('#teamCapacityTable tbody');
+  tbody.innerHTML = Object.keys(squads).map(teamName=>{
+    const stats = getTeamCapacityStats(teamName);
+    const isSelected = teamName===state.selectedTeam;
+    return '<tr>'+
+      '<td>'+teamName+'</td>'+
+      '<td class="num">'+stats.members+'</td>'+
+      '<td class="num">'+stats.raw+'</td>'+
+      '<td class="num">-'+stats.holidayPts+'</td>'+
+      '<td class="num">'+stats.net+'</td>'+
+      '<td><button class="btn small '+(isSelected?'':'ghost')+'" onclick="selectTeam(\''+teamName+'\')">'+(isSelected?'Selected':'Select')+'</button></td>'+
+      '</tr>';
+  }).join('');
+}
+
+function selectTeam(teamName){
+  $('#squad').value = teamName;
+  refreshTeamData();
+}
+
+function renderCapacity(){
+  const tbody = $('#capacityTable tbody');
+  let raw=0, holidayLoss=0;
+  tbody.innerHTML = state.capacityPeople.map(p=>{ raw+=p.capacity; holidayLoss+=p.holidays; return '<tr><td>'+p.name+'</td><td>'+p.holidays+'</td><td class="num">'+p.velocity+'</td><td class="num">'+p.capacity+'</td></tr>'; }).join('');
+  const holidayPts = Math.round(holidayLoss*1.5);
+  const net = Math.round((raw-holidayPts)*0.9);
+  $('#kpiPeople').textContent = String(state.capacityPeople.length);
+  $('#kpiRaw').textContent    = String(raw);
+  $('#kpiHoliday').textContent= '-'+holidayPts;
+  $('#kpiNet').textContent    = String(net);
+  return {raw, holidayPts, net};
+}
+
+function renderAllocation(){
+  const {net} = renderCapacity();
+  const cm   = Math.round(net*0.28);
+  const qa   = Math.round(net*0.05);
+  const disc = net - cm - qa;
+  const rows = [
+    {bucket:'Compliance & Maintenance', rule:'28% of net capacity', pts:cm, pct:28},
+    {bucket:'Quality',                  rule:'5% of net capacity',  pts:qa, pct:5},
+    {bucket:'Discretionary',            rule:'67% of net capacity', pts:disc, pct:67}
+  ];
+  $('#allocationRows').innerHTML = '<table><thead><tr><th>Bucket</th><th>Rule</th><th class="num">Points</th><th>Share</th></tr></thead><tbody>'+
+    rows.map(r=>'<tr><td>'+r.bucket+'</td><td>'+r.rule+'</td><td class="num">'+r.pts+'</td><td>'+progress(r.pct)+'</td></tr>').join('')+'</tbody></table>';
+}
+
+/* ── Dashboard (Tab 4) ── */
+function renderQuarterlyDash(){
+  const cap = renderCapacity();
+  const approved  = state.proposedItems.filter(p=>p.action==='approve');
+  const totalPts  = approved.reduce((s,p)=>s+p.pts,0);
+  const fit       = totalPts<=cap.net ? 100 : Math.round((cap.net/totalPts)*100);
+  const overflow  = Math.max(0, totalPts-cap.net);
+  const epicPts   = approved.filter(p=>p.type==='Epic').reduce((s,p)=>s+p.pts,0);
+  const featurePts= approved.filter(p=>p.type==='Feature').reduce((s,p)=>s+p.pts,0);
+  const qualityPts= Math.round(totalPts*0.1);
+
+  $('#dashboardSummary').innerHTML =
+    '<div class="kpi"><div class="t">Total Proposed</div><div class="v">'+totalPts+'</div><div class="s">Approved story points</div></div>'+
+    '<div class="kpi"><div class="t">PR Net Capacity</div><div class="v">'+cap.net+'</div><div class="s">Available points</div></div>'+
+    '<div class="kpi"><div class="t">Fit Confidence</div><div class="v">'+fit+'%</div><div class="s">'+(fit===100?'Perfect fit':'Overflow: '+overflow)+'</div></div>'+
+    '<div class="kpi"><div class="t">Sources Reviewed</div><div class="v">'+state.sources.filter(s=>s.status!=='pending').length+'</div><div class="s">of '+state.sources.length+' sources</div></div>';
+
+  const rows=[
+    {cat:'Proposed Epics',    pts:epicPts,    status:epicPts>0?'In Plan':'None'},
+    {cat:'Proposed Features', pts:featurePts, status:featurePts>0?'In Plan':'None'},
+    {cat:'Quality/Ops',       pts:qualityPts, status:'Reserved'},
+    {cat:'Overflow',          pts:overflow,   status:overflow>0?'Backlog':'None'}
+  ];
+  $('#quarterlyTable tbody').innerHTML = rows.map(r=>{
+    const pct = totalPts ? Math.round((r.pts/(totalPts+qualityPts))*100) : 0;
+    return '<tr><td>'+r.cat+'</td><td class="num">'+r.pts+'</td><td>'+progress(pct)+'</td><td>'+badge(r.status,r.status==='In Plan'?'green':r.status==='Backlog'?'red':'blue')+'</td><td>'+(r.pts<=cap.net?badge('Fits','green'):badge('Overflow','red'))+'</td></tr>';
+  }).join('');
+
+  const rec = fit<50 ? '<strong style="color:var(--danger)">⚠️ WARNING:</strong> Capacity overfilled by '+(100-fit)+'%. Recommend descoping or extending quarter.' :
+              fit<80 ? '<strong style="color:var(--warning)">⚠️ CAUTION:</strong> Capacity '+fit+'% utilized. Limited buffer for risks.' :
+              '<strong style="color:var(--success)">✓ ON TRACK:</strong> Plan fits within PR capacity with buffer.';
+  $('#recommendationBox').innerHTML = '<div class="notice" style="border-color:var(--warning);background:#fffbf0;color:var(--warning);">'+rec+'</div>';
+}
+
+/* ── Step Progress Tracking ── */
+const stepMapping = {
+  'overview': [1, 2, 3, 6, 7],
+  'capacity': [4, 5],
+  'dashboard': 8
+};
+
+function updateStepProgress(tabName){
+  const steps = stepMapping[tabName] || [];
+  const stepArray = Array.isArray(steps) ? steps : [steps];
+  const maxStep = Math.max(...stepArray.filter(s=>s>0), 0);
+  
+  $$('.step-dot').forEach((dot, idx)=>{
+    const stepNum = idx + 1;
+    dot.classList.remove('done', 'current', 'upcoming');
+    if(stepNum < maxStep){ dot.classList.add('done'); }
+    else if(stepNum === maxStep){ dot.classList.add('current'); }
+    else { dot.classList.add('upcoming'); }
+  });
+}
+
+function setActiveWorkflowStep(stepNum){
+  $$('.workflow-step-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.workflowStep===String(stepNum)));
+  $$('.workflow-detail').forEach(detail=>detail.classList.toggle('active', detail.dataset.workflowDetail===String(stepNum)));
+}
+
+function updateWorkflowStoryPointTotal(){
+  const total = Array.from($$('.story-point-input')).reduce((sum, input)=>sum + (Number(input.value)||0), 0);
+  const totalEl = $('#workflowStoryPointTotal');
+  if(totalEl) totalEl.textContent = total;
+}
+
+/* ── Event wiring ── */
+$$('.workflow-step-btn').forEach(btn=>btn.addEventListener('click', ()=>setActiveWorkflowStep(btn.dataset.workflowStep)));
+document.addEventListener('click', event=>{
+  const navButton = event.target.closest('.workflow-nav-btn');
+  if(navButton){ setActiveWorkflowStep(navButton.dataset.navStep); }
+});
+document.addEventListener('input', event=>{
+  if(event.target.classList.contains('story-point-input')) updateWorkflowStoryPointTotal();
+  if(event.target.classList.contains('team-velocity-input')) renderWorkIntakeCapacity();
+});
+
+$('#addCarryItemBtn').addEventListener('click', ()=>{
+  const input = $('#carryOverAddInput');
+  const value = input.value.trim();
+  if(!value) return;
+  state.carryOvers.push(value);
+  input.value = '';
+  renderCarryOverList();
+  renderWorkIntakeCapacity();
+});
+
+$('#applyContext').addEventListener('click', ()=>{ updateContextLabel(); renderQuarterlyDash(); renderWorkIntakeSummary(); });
+$('#quarter').addEventListener('change', ()=>{ updateContextLabel(); renderQuarterlyDash(); renderWorkIntakeSummary(); });
+$('#squad').addEventListener('change', refreshTeamData);
+
+$('#addSourceBtn').addEventListener('click', ()=>{
+  $('#sourceType').value=''; $('#sourceName').value=''; $('#sourceUrl').value=''; $('#sourceDescription').value='';
+  $('#addSourceModal').style.display='flex';
+});
+
+$('#submitNewSourceBtn').addEventListener('click', ()=>{
+  const typeVal=$('#sourceType').value, nameVal=$('#sourceName').value.trim(), descVal=$('#sourceDescription').value.trim();
+  if(!typeVal||!nameVal||!descVal){ alert('Please fill in source type, name, and description.'); return; }
+  const typeMap={confluence:'🔗',excel:'📊',word:'📄',ppt:'🎯',transcript:'📝',audio:'🎙️',video:'🎬',email:'📧',slack:'💬',database:'🗄️',api:'⚙️',other:'📎'};
+  const typeName={confluence:'Confluence',excel:'Excel',word:'Word',ppt:'PowerPoint',transcript:'Transcript',audio:'Audio',video:'Video',email:'Email',slack:'Slack',database:'Database',api:'API Docs',other:'Other'};
+  state.sources.push({id:Math.max(...state.sources.map(s=>s.id),0)+1, name:nameVal, type:typeName[typeVal], icon:typeMap[typeVal], items:0, status:'pending', category:'custom', detail:descVal, itemList:[], url:$('#sourceUrl').value.trim()});
+  renderSources();
+  $('#addSourceModal').style.display='none';
+  alert('✓ Source added. Click on the tile to review items, edit if needed, and confirm.');
+});
+
+$('#runLLMBtn').addEventListener('click', ()=>{ alert('✓ Analysis completed.\n\nReview proposed items and mark as "approve" or "pending".'); renderProposed(); });
+
+$('#exportQuarterlyBtn').addEventListener('click', ()=>{
+  const cap=renderCapacity();
+  const totalPts=state.proposedItems.filter(p=>p.action==='approve').reduce((s,p)=>s+p.pts,0);
+  const csv=[['PR ID','Quarter','FY','Team','Net Capacity','Proposed Points','Fit %','Status'],
+    [$('#prId').value,$('#quarter').value,$('#fy').value,state.selectedTeam,cap.net,totalPts,Math.min(100,Math.round((cap.net/Math.max(1,totalPts))*100)),totalPts<=cap.net?'Fits':'Overflow']]
+    .map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='pr-planning-'+$('#quarter').value+'-'+$('#fy').value.replace('FY ','')+'.csv';
+  a.click();
+});
+
+/* ── Init ── */
+setTeamOptions();
+$('#squad').value='Indus';
+refreshTeamData();
+renderSources();
+renderProposed();
+updateContextLabel();
+renderWorkIntakeSummary();
+updateStepProgress('overview');
+</script>
+</body>
+</html>
+
