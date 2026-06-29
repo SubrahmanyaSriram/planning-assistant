@@ -1,0 +1,18 @@
+Epic: Functional Epic A
+Story: Story A1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story A2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Epic: Functional Epic B
+Story: Story B1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story B2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3

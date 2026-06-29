@@ -1,0 +1,18 @@
+Epic: C&M Epic A
+Story: Story C1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story C2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Epic: C&M Epic B
+Story: Story D1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story D2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3

@@ -1,0 +1,18 @@
+Epic: Quality Epic A
+Story: Story Q1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story Q2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Epic: Quality Epic B
+Story: Story R1
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3
+Story: Story R2
+AC: Acceptance criteria 1
+AC: Acceptance criteria 2
+AC: Acceptance criteria 3

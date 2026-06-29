@@ -172,9 +172,10 @@
   .workflow-step-btn.active{background:linear-gradient(135deg,#0f4c81,#1369b3);color:#fff;border-color:#0f4c81;box-shadow:0 8px 20px rgba(15,76,129,.2)}
   .workflow-step-btn.active .step-badge{background:rgba(255,255,255,.2);color:#fff}
   .workflow-arrow{color:#94a3b8;font-size:12px;font-weight:700}
-  .workflow-detail-card{margin-top:14px;border:1px solid #dce8f6;background:#fff;border-radius:12px;padding:14px}
-  .workflow-detail{display:none}
-  .workflow-detail.active{display:block}
+  .workflow-detail-card{margin-top:14px;border:1px solid #dce8f6;background:#fff;border-radius:12px;padding:14px;min-height:680px}
+  .workflow-detail{display:none;flex-direction:column;min-height:620px}
+  .workflow-detail.active{display:flex}
+  .workflow-detail > .workflow-nav{margin-top:auto}
   .workflow-detail h3{margin:0 0 6px;font-size:15px}
   .workflow-detail p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.5}
   .workflow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
@@ -202,6 +203,25 @@
   .workflow-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:16px}
   .workflow-nav-single{justify-content:flex-end}
   .workflow-nav .workflow-nav-btn{min-width:96px}
+  .tree-panel{background:#f4f7fb;border:1px solid #dbe8f5;border-radius:12px;padding:14px}
+  .tree-diagram{display:flex;flex-direction:column;align-items:center;gap:16px;position:relative}
+  .tree-row{display:flex;justify-content:center;gap:22px;position:relative;width:100%}
+  .tree-row:not(:last-child)::after{content:'';position:absolute;left:50%;bottom:0;width:2px;height:24px;background:linear-gradient(#a5b4fc,#dbeafe);transform:translateX(-50%)}
+  .tree-row.tree-branch-row::before{content:'';position:absolute;top:0;left:50%;width:100%;height:2px;background:linear-gradient(to right,#dbeafe,#a5b4fc);transform:translateX(-50%)}
+  .tree-node{display:flex;align-items:center;justify-content:center;min-width:140px;padding:12px 14px;border:1px solid #dbeafe;border-radius:999px;background:#fff;color:var(--text);box-shadow:0 8px 20px rgba(15,76,129,.05)}
+  .tree-root{background:#eef2ff;border-color:#c7d2fe;font-weight:700}
+  .tree-branch{background:#eef2ff;border-color:#c7d2fe}
+  .tree-leaf{background:#f8fafc;border-color:#bfdbfe}
+  .tree-leaf button{width:100%;justify-content:center}
+  .tree-load-btn.selected{background:#1f8c4a;color:#fff;border-color:#166534;box-shadow:0 10px 20px rgba(16,185,129,.15)}
+  .tree-output{margin-top:16px;padding:12px;border:1px dashed #93c5fd;border-radius:10px;background:#f8fbff;min-height:120px}
+  .tree-output-title{font-weight:700;margin-bottom:10px}
+  .tree-epic{margin-top:12px}
+  .tree-epic .tree-epic-title{font-weight:700}
+  .tree-story{margin-left:16px;margin-top:10px}
+  .tree-story .tree-story-title{font-weight:600}
+  .tree-criteria{margin-left:24px;margin-top:6px}
+  .tree-loading{font-size:13px;color:var(--muted);padding:12px;border-radius:10px;background:#eef4ff}
 </style>
 </head>
 <body>
@@ -288,6 +308,24 @@
           </div>
         </div>
       </div>
+      <div class="workflow-panel tree-panel" style="margin-top:16px">
+        <h4>Breakdown tree</h4>
+        <div class="tree-diagram">
+          <div class="tree-row tree-root-row">
+            <div class="tree-node tree-root"><span>Breakdown</span></div>
+          </div>
+          <div class="tree-row tree-branch-row">
+            <div class="tree-node tree-branch"><span>Discretionary 67%</span></div>
+            <div class="tree-node tree-branch"><span>Non-discretionary 33%</span></div>
+          </div>
+          <div class="tree-row tree-leaf-row">
+            <div class="tree-node tree-leaf"><button class="btn small tree-load-btn" data-tree-type="discretionary">Functionaly EPICs</button></div>
+            <div class="tree-node tree-leaf"><button class="btn small tree-load-btn" data-tree-type="cm">C&amp;M EPICs (28%)</button></div>
+            <div class="tree-node tree-leaf"><button class="btn small tree-load-btn" data-tree-type="quality">Quality EPICs (5%)</button></div>
+          </div>
+        </div>
+        <div id="workIntakeTreeOutput" class="tree-output"></div>
+      </div>
       <div class="workflow-nav workflow-nav-single">
         <button type="button" class="btn workflow-nav-btn" data-nav-step="2">Next</button>
       </div>
@@ -297,15 +335,18 @@
       <h3>2. High level sizing</h3>
       <p>Each epic and story is sized at a high level, and the story point values can be updated before the plan is finalized.</p>
       <div class="workflow-panel">
+        <div class="workflow-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px">
+          <button type="button" class="btn small page2-group-btn" data-group="discretionary">Functionaly EPICs</button>
+          <button type="button" class="btn small page2-group-btn" data-group="cm">C&amp;M EPICs (28%)</button>
+          <button type="button" class="btn small page2-group-btn" data-group="quality">Quality EPICs (5%)</button>
+        </div>
         <table class="workflow-table">
-          <thead><tr><th>Work item</th><th>Type</th><th>Story points</th></tr></thead>
-          <tbody>
-            <tr><td>EPIC-101 – Customer onboarding</td><td>Epic</td><td><input class="story-point-input" type="number" value="34" /></td></tr>
-            <tr><td>STORY-214 – Billing exception workflow</td><td>Story</td><td><input class="story-point-input" type="number" value="13" /></td></tr>
-            <tr><td>STORY-218 – Support handoff improvements</td><td>Story</td><td><input class="story-point-input" type="number" value="8" /></td></tr>
+          <thead><tr><th style="width:55%">Work item</th><th style="width:15%">Type</th><th style="width:30%">Story points</th></tr></thead>
+          <tbody id="workflowSizeTableBody">
+            <tr><td colspan="3" style="text-align:center;padding:18px;color:var(--muted)">Select a group to view epics and stories.</td></tr>
           </tbody>
         </table>
-        <div class="workflow-badges"><span class="workflow-badge blue">Total planned points</span><span class="workflow-badge green" id="workflowStoryPointTotal">55</span></div>
+        <div class="workflow-badges"><span class="workflow-badge blue">Group planned points</span><span class="workflow-badge green" id="workflowStoryPointTotal">0</span></div>
       </div>
       <div class="workflow-nav">
         <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="1">Back</button>
@@ -601,6 +642,211 @@ function renderCarryOverList(){ const list = $('#carryOverList'); if(!list) retu
 function renderWorkIntakeCapacity(){ const sprintCount = getSprintCount($('#quarter').value); const summary = $('#teamCapacitySummary'); if(!summary) return; const rows = Array.from($$('.team-velocity-input')).map(input=>{ const team = input.dataset.team; const velocity = Number(input.value)||0; const capacity = Math.round(velocity * sprintCount); return {team,capacity}; }); summary.innerHTML = rows.map(row=>'<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px"><span>'+row.team+'</span><span>'+row.capacity+' pts</span></div>').join(''); $('#sprintCountValue').textContent = formatSprintCount(sprintCount); }
 function renderWorkIntakeSummary(){ renderCarryOverList(); renderWorkIntakeCapacity(); }
 
+const treeButtonConfig = {
+  discretionary: { label: 'Functionaly EPICs', file: 'functional-epics.txt' },
+  cm: { label: 'C&M EPICs (28%)', file: 'cm-epics.txt' },
+  quality: { label: 'Quality EPICs (5%)', file: 'quality-epics.txt' }
+};
+
+const page2GroupFiles = [
+  { key: 'discretionary', label: 'Functional EPICs', file: 'functional-epics.txt' },
+  { key: 'cm', label: 'C&M EPICs (28%)', file: 'cm-epics.txt' },
+  { key: 'quality', label: 'Quality EPICs (5%)', file: 'quality-epics.txt' }
+];
+
+let page2GroupData = { discretionary: [], cm: [], quality: [] };
+let selectedPage2Group = null;
+
+function parseEpicsFile(text){
+  const lines = text.split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+  const epics = [];
+  let currentEpic = null;
+  let currentStory = null;
+
+  lines.forEach(line=>{
+    const lower = line.toLowerCase();
+    if(lower.startsWith('epic:')){
+      currentEpic = { title: line.slice(5).trim(), stories: [] };
+      epics.push(currentEpic);
+      currentStory = null;
+    } else if(lower.startsWith('story:')){
+      if(!currentEpic){ currentEpic = { title: 'Unassigned Epic', stories: [] }; epics.push(currentEpic); }
+      currentStory = { title: line.slice(6).trim(), criteria: [] };
+      currentEpic.stories.push(currentStory);
+    } else if(lower.startsWith('ac:') || lower.startsWith('acceptance criteria:')){
+      if(!currentStory){
+        if(!currentEpic){ currentEpic = { title: 'Unassigned Epic', stories: [] }; epics.push(currentEpic); }
+        currentStory = { title: 'Unassigned Story', criteria: [] };
+        currentEpic.stories.push(currentStory);
+      }
+      currentStory.criteria.push(line.replace(/^(ac:|acceptance criteria:)/i,'').trim());
+    } else if(line.startsWith('-')){
+      const content = line.slice(1).trim();
+      if(currentStory){ currentStory.criteria.push(content); }
+      else if(currentEpic){ currentEpic.stories.push({ title: content, criteria: [] }); currentStory = currentEpic.stories[currentEpic.stories.length-1]; }
+      else { epics.push({ title: content, stories: [] }); }
+    } else {
+      if(currentStory){ currentStory.criteria.push(line); }
+      else if(currentEpic){ currentEpic.stories.push({ title: line, criteria: [] }); currentStory = currentEpic.stories[currentEpic.stories.length-1]; }
+      else { epics.push({ title: line, stories: [] }); }
+    }
+  });
+
+  return epics;
+}
+
+function renderPage2SizingTable(){
+  const tbody = $('#workflowSizeTableBody');
+  if(!tbody) return;
+  if(!selectedPage2Group){
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:18px;color:var(--muted)">Select a group to view epics and stories.</td></tr>';
+    $('#workflowStoryPointTotal').textContent = '0';
+    return;
+  }
+  const epics = page2GroupData[selectedPage2Group] || [];
+  if(!epics.length){
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:18px;color:var(--muted)">No epics loaded for this group.</td></tr>';
+    $('#workflowStoryPointTotal').textContent = '0';
+    return;
+  }
+  tbody.innerHTML = epics.map((epic, epicIndex)=>{
+    const epicRows = [];
+    epicRows.push(
+      '<tr class="epic-row">' +
+      '<td><strong>'+epic.title+'</strong></td>' +
+      '<td>Epic</td>' +
+      '<td><input type="number" class="epic-point-input" data-epic-index="'+epicIndex+'" value="'+epic.points+'" min="0" /></td>' +
+      '</tr>'
+    );
+    epic.stories.forEach((story, storyIndex)=>{
+      epicRows.push(
+        '<tr class="story-row">' +
+        '<td style="padding-left:20px">📌 '+story.title+'</td>' +
+        '<td>Story</td>' +
+        '<td><input type="number" class="story-point-input page2-story-point-input" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" value="'+story.points+'" min="0" /></td>' +
+        '</tr>'
+      );
+    });
+    return epicRows.join('');
+  }).join('');
+  updateWorkflowStoryPointTotal();
+}
+
+function normalizePage2Epics(epics){
+  return epics.map(epic=>{
+    const stories = epic.stories.filter(story=>story.title).map(story=>({ title: story.title, points: 3 }));
+    const total = stories.reduce((sum, story)=>sum + story.points, 0);
+    return { title: epic.title || 'Untitled Epic', stories, points: total };
+  }).filter(epic=>epic.stories.length);
+}
+
+function loadPage2GroupFiles(){
+  const body = $('#workflowSizeTableBody');
+  if(body) body.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:18px;color:var(--muted)">Loading epics from planning files...</td></tr>';
+  Promise.all(page2GroupFiles.map(src=>
+    fetch(src.file)
+      .then(resp=>resp.ok ? resp.text() : '')
+      .catch(()=>'')
+      .then(text=>({ key: src.key, text }))
+  )).then(results=>{
+    results.forEach(result=>{
+      const epics = result.text ? parseEpicsFile(result.text) : [];
+      page2GroupData[result.key] = normalizePage2Epics(epics);
+    });
+    renderPage2SizingTable();
+  });
+}
+
+function setPage2Group(group){
+  selectedPage2Group = group;
+  $$('.page2-group-btn').forEach(btn=>btn.classList.toggle('active', btn.dataset.group===group));
+  renderPage2SizingTable();
+}
+
+function syncPage2EpicFromStories(epicIndex){
+  const epics = page2GroupData[selectedPage2Group] || [];
+  const epic = epics[epicIndex];
+  if(!epic) return;
+  epic.points = epic.stories.reduce((sum, story)=>sum + (Number(story.points)||0), 0);
+  const epicInput = document.querySelector('.epic-point-input[data-epic-index="'+epicIndex+'"]');
+  if(epicInput) epicInput.value = epic.points;
+  updateWorkflowStoryPointTotal();
+}
+
+function distributePage2StoryPoints(epicIndex){
+  const epics = page2GroupData[selectedPage2Group] || [];
+  const epic = epics[epicIndex];
+  if(!epic) return;
+  const epicInput = document.querySelector('.epic-point-input[data-epic-index="'+epicIndex+'"]');
+  const totalPoints = Number(epicInput ? epicInput.value : epic.points) || 0;
+  epic.points = totalPoints;
+  const storyCount = epic.stories.length;
+  if(storyCount === 0) return;
+  const base = Math.floor(totalPoints / storyCount);
+  let remainder = totalPoints - base * storyCount;
+  epic.stories.forEach((story, index)=>{
+    story.points = base + (remainder > 0 ? 1 : 0);
+    remainder = Math.max(0, remainder - 1);
+    const storyInput = document.querySelector('.page2-story-point-input[data-epic-index="'+epicIndex+'"][data-story-index="'+index+'"]');
+    if(storyInput) storyInput.value = story.points;
+  });
+  updateWorkflowStoryPointTotal();
+}
+
+function renderCarryOverList(){
+  const list = $('#carryOverList');
+  if(!list) return;
+  if(Array.isArray(state.carryOverEpics) && state.carryOverEpics.length){
+    list.innerHTML = state.carryOverEpics.map(epic=>
+      '<li><strong>'+epic.title+'</strong><ul>'+epic.stories.map(story=>
+        '<li><strong>'+story.title+'</strong><ul>'+story.criteria.map(crit=>'<li>'+crit+'</li>').join('')+'</ul></li>'
+      ).join('')+'</ul></li>'
+    ).join('');
+  } else {
+    list.innerHTML = state.carryOvers.map(item=>' <li>'+item+'</li>').join('');
+  }
+}
+
+function loadCarryOverFile(){
+  fetch('carryover.txt')
+    .then(resp=>{
+      if(!resp.ok) throw new Error('Load failed');
+      return resp.text();
+    })
+    .then(text=>{ state.carryOverEpics = parseEpicsFile(text); renderCarryOverList(); })
+    .catch(()=>{});
+}
+
+function renderTreeContent(type, epics){
+  const config = treeButtonConfig[type];
+  if(!config) return '';
+  return '<div class="tree-output-title">'+config.label+'</div>'+epics.map(epic=>
+    '<div class="tree-epic"><div class="tree-epic-title">'+epic.title+'</div>'+epic.stories.map(story=>
+      '<div class="tree-story"><div class="tree-story-title">'+story.title+'</div><ul class="tree-criteria">'+
+      (story.criteria||[]).map(crit=>'<li>'+crit+'</li>').join('')+'</ul></div>'
+    ).join('')+'</div>'
+  ).join('');
+}
+
+function loadTreeContent(type){
+  const output = $('#workIntakeTreeOutput');
+  const config = treeButtonConfig[type];
+  if(!output || !config) return;
+  output.innerHTML = '<div class="tree-loading">Loading '+config.label+'...</div>';
+  $$('.tree-load-btn').forEach(btn=>btn.disabled=true);
+  fetch(config.file)
+    .then(resp=>{
+      if(!resp.ok) throw new Error('Load failed');
+      return resp.text();
+    })
+    .then(text=>{
+      const epics = parseEpicsFile(text);
+      output.innerHTML = renderTreeContent(type, epics);
+    })
+    .catch(()=>{ output.innerHTML = '<div class="tree-loading">Unable to load '+config.label+'.</div>'; })
+    .finally(()=>{ $$('.tree-load-btn').forEach(btn=>btn.disabled=false); });
+}
+
 /* ── Context ── */
 function setTeamOptions(){
   const sel = $('#squad');
@@ -818,9 +1064,30 @@ function updateWorkflowStoryPointTotal(){
 $$('.workflow-step-btn').forEach(btn=>btn.addEventListener('click', ()=>setActiveWorkflowStep(btn.dataset.workflowStep)));
 document.addEventListener('click', event=>{
   const navButton = event.target.closest('.workflow-nav-btn');
-  if(navButton){ setActiveWorkflowStep(navButton.dataset.navStep); }
+  if(navButton){ setActiveWorkflowStep(navButton.dataset.navStep); return; }
+  const treeButton = event.target.closest('.tree-load-btn');
+  if(treeButton){ treeButton.classList.add('selected'); loadTreeContent(treeButton.dataset.treeType); return; }
+  const groupButton = event.target.closest('.page2-group-btn');
+  if(groupButton){ setPage2Group(groupButton.dataset.group); return; }
 });
+window.addEventListener('load', ()=>{ loadCarryOverFile(); loadPage2GroupFiles(); renderWorkIntakeSummary(); });
 document.addEventListener('input', event=>{
+  if(event.target.classList.contains('epic-point-input')){
+    const epicIndex = Number(event.target.dataset.epicIndex);
+    if(!Number.isNaN(epicIndex)) distributePage2StoryPoints(epicIndex);
+  }
+  if(event.target.classList.contains('page2-story-point-input')){
+    const epicIndex = Number(event.target.dataset.epicIndex);
+    const storyIndex = Number(event.target.dataset.storyIndex);
+    if(!Number.isNaN(epicIndex) && !Number.isNaN(storyIndex)){
+      const epics = page2GroupData[selectedPage2Group] || [];
+      const epic = epics[epicIndex];
+      if(epic && epic.stories[storyIndex]){
+        epic.stories[storyIndex].points = Number(event.target.value) || 0;
+        syncPage2EpicFromStories(epicIndex);
+      }
+    }
+  }
   if(event.target.classList.contains('story-point-input')) updateWorkflowStoryPointTotal();
   if(event.target.classList.contains('team-velocity-input')) renderWorkIntakeCapacity();
 });

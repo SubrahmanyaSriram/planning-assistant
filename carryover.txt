@@ -1,0 +1,15 @@
+Epic: Customer intake reconciliation
+Story: Remaining logging cleanup
+AC: Document current gap analysis
+AC: Validate existing handoff paths
+AC: Confirm regression scenarios
+Epic: Cross-team dependency stabilization
+Story: Stabilize integration pipeline
+AC: Align release windows
+AC: Resolve shared service contract issues
+AC: Confirm dependency readiness
+Epic: Cross-team onboarding support
+Story: Finish cross-team kickoff checklist
+AC: Validate roles and responsibilities
+AC: Confirm shared API contracts
+AC: Document escalation workflow
