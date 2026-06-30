@@ -16,3 +16,29 @@ Story: Story B2
 AC: Acceptance criteria 1
 AC: Acceptance criteria 2
 AC: Acceptance criteria 3
+Epic: Functional Epic C
+Story: Story C1
+AC: Capture additional onboarding field validation
+AC: Confirm error handling across channels
+AC: Add audit trail coverage
+Story: Story C2
+AC: Build product-area dashboard filters
+AC: Confirm role-based visibility
+AC: Validate export behavior
+Story: Story C3
+AC: Add retry flow for failed submissions
+AC: Persist retry history
+AC: Notify owning squad
+Epic: Functional Epic D
+Story: Story D1
+AC: Build customer health summary
+AC: Confirm source data freshness
+AC: Add drill-down from summary rows
+Story: Story D2
+AC: Add workflow handoff automation
+AC: Validate target queue routing
+AC: Confirm ownership transfer logging
+Story: Story D3
+AC: Create planning variance dashboard
+AC: Show committed versus actual points
+AC: Add squad-level filters
