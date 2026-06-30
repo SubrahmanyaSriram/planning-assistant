@@ -113,6 +113,7 @@
   .modal{display:none;position:fixed;z-index:999;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,.4)}
   .modal.show{display:flex;align-items:center;justify-content:center}
   .modal-content{background:#fff;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.2);max-width:600px;max-height:80vh;overflow-y:auto;padding:20px}
+  .modal-content.wide{max-width:780px;width:min(780px,calc(100vw - 28px))}
   .modal-content h2,.modal-content h3{margin-top:0;color:var(--text)}
   .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
 
@@ -179,6 +180,13 @@
   .workflow-detail > .workflow-nav{margin-top:auto}
   .workflow-detail h3{margin:0 0 6px;font-size:15px}
   .workflow-detail p{margin:0 0 12px;color:var(--muted);font-size:13px;line-height:1.5}
+  .ai-assist{border:1px solid #c7d2fe;background:#eef2ff;color:#312e81;border-radius:8px;padding:10px 12px;margin:10px 0 12px;font-size:12px;line-height:1.45}
+  .ai-assist strong{display:block;margin-bottom:4px;color:#1e1b4b}
+  .source-pill-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+  .source-pill{display:inline-flex;padding:3px 8px;border-radius:999px;background:#dbeafe;color:#1e3a8a;font-size:11px;font-weight:800}
+  .action-chip{display:inline-flex;margin-left:6px;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:800}
+  .action-chip.create{background:#dcfce7;color:#14532d}
+  .action-chip.update{background:#ffedd5;color:#9a3412}
   .workflow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
   .workflow-panel{border:1px solid #e2e8f0;border-radius:10px;padding:12px;background:#f8fbff}
   .workflow-panel h4{margin:0 0 8px;font-size:13px}
@@ -190,6 +198,7 @@
   .workflow-table th,.workflow-table td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px}
   .workflow-table th{background:#f1f5f9;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
   .workflow-table input[type=number]{width:72px;padding:6px 8px;border:1px solid var(--border);border-radius:8px}
+  .workflow-table .row-actions{display:flex;gap:6px;flex-wrap:wrap}
   .workflow-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
   .workflow-kpi{padding:10px;border-radius:10px;background:#f8fbff;border:1px solid #e2e8f0}
   .workflow-kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
@@ -237,6 +246,8 @@
   .attachment-list{margin-top:14px;padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;min-height:60px}
   .attachment-item{padding:10px 12px;border:1px solid #cfd8e3;border-radius:10px;background:#f8fbff;margin-top:10px}
   .attachment-item strong{display:block;margin-bottom:4px}
+  .attachment-files{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .attachment-file{display:inline-flex;padding:3px 8px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:11px;font-weight:700}
   .muted-text{color:var(--muted);font-size:12px}
   .attachment-panel textarea{width:100%;resize:vertical}
   .tree-output-title{font-weight:700;margin-bottom:10px}
@@ -257,6 +268,7 @@
   .top{position:relative}
   .top-actions{position:absolute;right:18px;top:16px;display:flex;gap:8px;align-items:center}
   .icon-btn{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;padding:0;font-size:16px;font-weight:800}
+  .app-hidden{display:none!important}
   .report-panel{display:none;margin:14px 22px 0}
   .report-panel.show{position:fixed;z-index:1000;inset:0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(15,23,42,.52);border:0;border-radius:0;box-shadow:none}
   .report-panel.show .card-h,.report-panel.show .card-b{background:#fff;width:min(1120px,calc(100vw - 32px))}
@@ -275,6 +287,26 @@
   .grain-fit-row.bad{border-color:#fecaca;background:#fef2f2;color:#991b1b}
   .grain-fit-row.good{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
   .grain-fit-row strong{color:inherit}
+  .allocation-row td{background:#fff}
+  .allocation-row.team-indus td:first-child{border-left:4px solid #2563eb}
+  .allocation-row.team-sindhu td:first-child{border-left:4px solid #16a34a}
+  .allocation-row.team-corrib td:first-child{border-left:4px solid #dc2626}
+  .allocation-row.team-hudson td:first-child{border-left:4px solid #9333ea}
+  .allocation-row.team-potomac td:first-child{border-left:4px solid #ca8a04}
+  .allocation-row.team-niagara td:first-child{border-left:4px solid #0891b2}
+  .allocation-row.team-shannon td:first-child{border-left:4px solid #db2777}
+  .team-chip,.grain-chip{display:inline-flex;align-items:center;min-height:22px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800}
+  .team-chip.indus{background:#dbeafe;color:#1e3a8a}
+  .team-chip.sindhu{background:#dcfce7;color:#14532d}
+  .team-chip.corrib{background:#fee2e2;color:#7f1d1d}
+  .team-chip.hudson{background:#f3e8ff;color:#581c87}
+  .team-chip.potomac{background:#fef3c7;color:#78350f}
+  .team-chip.niagara{background:#cffafe;color:#164e63}
+  .team-chip.shannon{background:#fce7f3;color:#831843}
+  .grain-chip.discretionary{background:#e0f2fe;color:#075985}
+  .grain-chip.cm{background:#dbeafe;color:#1e3a8a}
+  .grain-chip.quality{background:#ede9fe;color:#4c1d95}
+  .grain-chip.carryover{background:#ffedd5;color:#9a3412}
   .workflow-steps .workflow-arrow:last-of-type{display:none}
   @media (max-width:900px){
     .workflow-shell,.card{margin-left:12px!important;margin-right:12px!important}
@@ -297,22 +329,23 @@
 <body>
 <header class="top">
   <h1>Planning Assistant</h1>
-  <p>Track your progress from intake through reporting</p>
+  <p>AI-assisted quarterly planning connected to Jira and Jira Align as the system of record</p>
   <div class="top-actions">
-    <button type="button" class="btn small ghost" id="viewReportBtn">Report</button>
+    <button type="button" class="btn small ghost app-hidden" id="viewReportBtn">Report</button>
     <button type="button" class="btn small icon-btn" id="infoBtn" title="What is this?" aria-label="What is this?">?</button>
   </div>
 </header>
 
 <div class="card" style="margin:14px 22px 0;padding:14px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow)">
-  <div class="field" style="margin:0;min-width:130px"><label for="prId" style="margin-bottom:3px">PR ID</label><input id="prId" value="PR174210" style="padding:6px 8px"/></div>
-  <div class="field" style="margin:0;min-width:130px"><label for="quarter" style="margin-bottom:3px">Quarter</label><select id="quarter" style="padding:6px 8px"><option>Q1</option><option selected>Q2</option><option>Q3</option><option>Q4</option></select></div>
-  <div class="field" style="margin:0;min-width:130px"><label for="fy" style="margin-bottom:3px">Fiscal Year</label><select id="fy" style="padding:6px 8px"><option>FY 2025</option><option selected>FY 2026</option><option>FY 2027</option></select></div>
+  <div class="field" style="margin:0;min-width:130px"><label for="prId" style="margin-bottom:3px">PR ID</label><input id="prId" value="" placeholder="Enter PR ID" style="padding:6px 8px"/></div>
+  <div class="field" style="margin:0;min-width:130px"><label for="quarter" style="margin-bottom:3px">Quarter</label><select id="quarter" style="padding:6px 8px"><option value="" selected>Select quarter</option><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select></div>
+  <div class="field" style="margin:0;min-width:130px"><label for="fy" style="margin-bottom:3px">Fiscal Year</label><select id="fy" style="padding:6px 8px"><option value="" selected>Select fiscal year</option><option>FY 2025</option><option>FY 2026</option><option>FY 2027</option></select></div>
   <button class="btn" id="applyContext" style="margin-top:16px">Apply</button>
-  <span class="footer-note" id="ctxLabel" style="margin:0;margin-top:16px">PR174210 · Q2 · FY 2026</span>
+  <button class="btn ghost app-hidden" id="resetPlanBtn" style="margin-top:16px">Start new</button>
+  <span class="footer-note" id="ctxLabel" style="margin:0;margin-top:16px">Enter PR, quarter, and fiscal year to start.</span>
 </div>
 
-<div class="workflow-shell" role="region" aria-label="Quarterly planning workflow">
+<div class="workflow-shell app-hidden" role="region" aria-label="Quarterly planning workflow">
   <div class="workflow-steps" style="align-items:center">
     <button type="button" class="workflow-step-btn active" data-workflow-step="1"><span class="step-badge">1</span><span>Work intake</span></button>
     <span class="workflow-arrow">→</span>
@@ -363,10 +396,12 @@
   <div class="workflow-detail-card">
     <div class="workflow-detail active" data-workflow-detail="1">
       <h3>1. Work Intake</h3>
-      <p>Capture the planning inputs needed for the next phases: carry-over work, team velocity, unavailable time, and allocation targets.</p>
+      <p>Start from Jira Align and Jira planning inputs: carryover work, team velocity, unavailable time, and allocation targets.</p>
+      <div class="ai-assist"><strong>AI assistance in this stage</strong>The assistant bridges scattered planning context by reading intake notes and suggesting epic breakdowns, acceptance criteria, and the right planning grain before work moves forward.</div>
       <div class="workflow-grid">
         <div class="workflow-panel">
-          <h4>Carry over stories and epics</h4>
+          <h4>Carryover from Jira / Jira Align</h4>
+          <div class="source-pill-row"><span class="source-pill">Fetched from Jira</span><span class="source-pill">Existing work</span><span class="source-pill">UPDATE candidates</span></div>
           <ul id="carryOverList" class="carry-list">
             <li>Epic: Customer intake reconciliation</li>
             <li>Story: Remaining logging cleanup</li>
@@ -374,7 +409,8 @@
           </ul>
         </div>
         <div class="workflow-panel">
-          <h4>Quarterly velocity by team</h4>
+          <h4>Velocity from Jira team history</h4>
+          <div class="source-pill-row"><span class="source-pill">Jira velocity</span><span class="source-pill">Team capacity</span></div>
           <div style="margin-top:8px;font-size:12px;color:var(--muted)">Sprints this quarter: <strong id="sprintCountValue">6.5</strong> (2-week sprints)</div>
           <div class="workflow-grid" style="grid-template-columns:1fr;gap:10px;margin-top:12px">
             <div class="field"><label>Indus</label><input class="team-velocity-input" data-team="Indus" type="number" value="19" /></div>
@@ -412,12 +448,14 @@
         </div>
       </div>
       <div class="workflow-panel attachment-panel" style="margin-top:16px">
-        <h4>New functional work intake</h4>
+        <h4>New functional work intake for AI review</h4>
+        <div class="ai-assist"><strong>What the assistant suggests</strong>Upload transcripts, links, notes, or emails. The tool uses them to propose functional epics, stories, and acceptance criteria that can later become CREATE candidates in Jira.</div>
         <div class="attachment-grid">
-          <div class="field"><label>Attachment type</label><select id="attachType"><option value="link">Link</option><option value="video">Video</option><option value="audio">Audio</option><option value="transcript">Transcript</option><option value="email">Email</option><option value="other">Other</option></select></div>
+          <div class="field"><label>Attachment type</label><select id="attachType"><option value="file">File upload</option><option value="link">Link</option><option value="video">Video</option><option value="audio">Audio</option><option value="transcript">Transcript</option><option value="email">Email</option><option value="other">Other</option></select></div>
           <div class="field"><label>Title / URL</label><input id="attachTitle" type="text" placeholder="Enter URL or title" /></div>
         </div>
         <div class="attachment-grid" style="margin-top:12px">
+          <div class="field" style="grid-column:1 / -1"><label>Upload attachment</label><input id="attachFile" type="file" multiple /></div>
           <div class="field" style="grid-column:1 / -1"><label>Comment</label><textarea id="attachComment" rows="3" placeholder="Describe the input or reference"></textarea></div>
           <div class="field"><label>Date</label><input id="attachDate" type="date" /></div>
         </div>
@@ -428,7 +466,7 @@
         <div id="attachmentList" class="attachment-list"></div>
       </div>
       <div class="workflow-panel tree-panel" style="margin-top:16px">
-        <h4>Breakdown tree</h4>
+        <h4>AI-assisted breakdown tree</h4>
         <div class="tree-diagram">
           <div class="tree-row tree-root-row">
             <div class="tree-node tree-root"><span>Breakdown</span></div>
@@ -446,13 +484,15 @@
         <div id="workIntakeTreeOutput" class="tree-output"></div>
       </div>
       <div class="workflow-nav workflow-nav-single">
+        <button type="button" class="btn ghost save-plan-btn">Save</button>
         <button type="button" class="btn workflow-nav-btn" data-nav-step="2">Next</button>
       </div>
     </div>
 
     <div class="workflow-detail" data-workflow-detail="2">
       <h3>2. High level sizing</h3>
-      <p>Each epic and story is sized at a high level, and the story point values can be updated before the plan is finalized.</p>
+      <p>Review Jira/Jira Align work items with AI-suggested high-level story points before the plan is finalized.</p>
+      <div class="ai-assist"><strong>AI assistance in this stage</strong>The assistant proposes initial story points by comparing acceptance criteria, scope signals, dependencies, and similar historical work. Planners can still override every number.</div>
       <div class="workflow-panel">
         <div class="workflow-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px" id="page2GroupButtons">
           <button type="button" class="btn small page2-group-btn" data-group="carryover">Carryover items</button>
@@ -460,23 +500,29 @@
           <button type="button" class="btn small page2-group-btn" data-group="cm">C&amp;M EPICs (28%)</button>
           <button type="button" class="btn small page2-group-btn" data-group="quality">Quality EPICs (5%)</button>
         </div>
+        <div class="workflow-badges" style="justify-content:flex-start;margin-bottom:10px">
+          <button type="button" class="btn small" id="addPage2EpicBtn">Add EPIC</button>
+          <button type="button" class="btn small ghost" id="addPage2StoryBtn">Add story</button>
+        </div>
         <table class="workflow-table">
-          <thead><tr><th style="width:38%">Work item</th><th style="width:12%">Type</th><th style="width:14%">Story points</th><th style="width:18%">Team</th><th style="width:18%">Assignee</th></tr></thead>
+          <thead><tr><th style="width:42%">Work item</th><th style="width:12%">Type</th><th style="width:14%">Story points</th><th style="width:18%">Team</th><th style="width:14%">Actions</th></tr></thead>
           <tbody id="workflowSizeTableBody">
-            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">Select a group to view epics and stories.</td></tr>
+            <tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">Loading carryover items...</td></tr>
           </tbody>
         </table>
         <div class="workflow-badges"><span class="workflow-badge blue">Group planned points</span><span class="workflow-badge green" id="workflowStoryPointTotal">0</span></div>
       </div>
       <div class="workflow-nav">
         <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="1">Back</button>
+        <button type="button" class="btn ghost save-plan-btn">Save</button>
         <button type="button" class="btn workflow-nav-btn" data-nav-step="3">Next</button>
       </div>
     </div>
 
     <div class="workflow-detail" data-workflow-detail="3">
       <h3>3. Capacity check & allocation</h3>
-      <p>Each team is shown individually. Capacity and allocation are calculated from page 1 velocity, unavailable time, and allocation targets.</p>
+      <p>Compare AI-sized work against Jira velocity, unavailable time, and Jira Align allocation targets.</p>
+      <div class="ai-assist"><strong>AI assistance in this stage</strong>The assistant highlights where a team, grain, or PR allocation is likely overloaded and suggests where rebalancing or descoping should be reviewed.</div>
       <div id="teamCapacityCards" class="workflow-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px"></div>
       <div class="workflow-grid" style="margin-top:16px">
         <div class="workflow-panel">
@@ -502,50 +548,55 @@
       </div>
       <div class="workflow-nav">
         <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="2">Back</button>
+        <button type="button" class="btn ghost save-plan-btn">Save</button>
         <button type="button" class="btn workflow-nav-btn" data-nav-step="4">Next</button>
       </div>
     </div>
 
     <div class="workflow-detail" data-workflow-detail="4">
       <h3>4. Low level sizing & prioritization</h3>
-      <p>Review detailed epics and stories from the planning files, adjust sizing, and set priorities in one unified page.</p>
+      <p>Refine low-level sizing with suggested design signals, dependency-aware priority, and story relationships before Jira publication.</p>
+      <div class="ai-assist"><strong>AI assistance in this stage</strong>The assistant can suggest low-level design notes, sequencing constraints, and priority based on linked stories, carryover dependency chains, risk, and business value.</div>
       <div class="workflow-panel">
         <div class="workflow-grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:12px" id="combinedGroupButtons"></div>
         <table class="workflow-table">
-          <thead><tr><th style="width:50%">Work item</th><th style="width:20%">Type</th><th style="width:15%">Story points</th><th style="width:15%">Priority</th></tr></thead>
+          <thead><tr><th style="width:42%">Work item</th><th style="width:15%">Type</th><th style="width:13%">Story points</th><th style="width:14%">Priority</th><th style="width:16%">Actions</th></tr></thead>
           <tbody id="combinedWorkTable"></tbody>
         </table>
         <div class="workflow-badges"><span class="workflow-badge blue">Group planned points</span><span class="workflow-badge green" id="combinedStoryPointTotal">0</span></div>
       </div>
       <div class="workflow-panel" style="margin-top:14px">
-        <h4>Prioritization guidance</h4>
-        <p style="margin:0 0 12px;color:var(--muted);font-size:13px">Use priority levels to capture business value, risk, or sequence constraints for each story.</p>
-        <div id="combinedPriorityNote" class="notice">Prioritization updates are saved automatically as you change values.</div>
+        <h4>AI prioritization guidance</h4>
+        <p style="margin:0 0 12px;color:var(--muted);font-size:13px">Priority recommendations account for business value, technical risk, story dependencies, and whether the item blocks other Jira or Jira Align work.</p>
+        <div id="combinedPriorityNote" class="notice">Suggested priority and low-level sizing updates are saved automatically as you change values.</div>
       </div>
       <div class="workflow-nav">
         <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="3">Back</button>
+        <button type="button" class="btn ghost save-plan-btn">Save</button>
         <button type="button" class="btn workflow-nav-btn" data-nav-step="5">Next</button>
       </div>
     </div>
 
     <div class="workflow-detail" data-workflow-detail="5">
       <h3>5. Publish to JIRA</h3>
-      <p>Review the final epics and stories, then publish them to JIRA. Links will appear once publication is complete.</p>
+      <p>Review final AI-assisted planning decisions, then choose exactly what should CREATE new Jira work or UPDATE existing carryover work.</p>
+      <div class="ai-assist"><strong>AI assistance in this stage</strong>The assistant preserves the planning rationale so Jira publish decisions are traceable: suggested points, priority, team, assignee, and whether the item is a CREATE or UPDATE.</div>
       <div class="workflow-panel" style="margin-top:14px">
         <table class="workflow-table">
-          <thead><tr><th style="width:8%">Create</th><th style="width:24%">Item</th><th style="width:16%">Group</th><th style="width:10%">Type</th><th style="width:14%">Team</th><th style="width:14%">Assignee</th><th style="width:8%">Priority</th><th style="width:16%">JIRA link</th></tr></thead>
+          <thead><tr><th style="width:8%">Publish</th><th style="width:24%">Item</th><th style="width:16%">Group</th><th style="width:10%">Type</th><th style="width:14%">Team</th><th style="width:14%">Assignee</th><th style="width:8%">Priority</th><th style="width:16%">JIRA link</th></tr></thead>
           <tbody id="jiraPublishTable"></tbody>
         </table>
-        <div class="workflow-badges"><span class="workflow-badge amber">Carryover rows are highlighted</span><span class="workflow-badge blue">Checked rows will be created or updated</span></div>
+        <div class="workflow-badges"><span class="workflow-badge amber">Carryover rows become UPDATE</span><span class="workflow-badge green">New items become CREATE</span><span class="workflow-badge blue">Checked rows publish to Jira</span></div>
       </div>
       <div class="workflow-panel" style="margin-top:14px">
-        <div id="publishStatus" class="notice">Select the epics and stories to create or update in JIRA.</div>
+        <div id="publishStatus" class="notice">Select the epics and stories to CREATE or UPDATE in Jira.</div>
         <div class="workflow-nav workflow-nav-single" style="margin-top:12px">
           <button type="button" class="btn success" id="publishJiraBtn">Submit to JIRA</button>
         </div>
       </div>
       <div class="workflow-nav">
         <button type="button" class="btn ghost workflow-nav-btn" data-nav-step="4">Back</button>
+        <button type="button" class="btn ghost save-plan-btn">Save</button>
       </div>
     </div>
   </div>
@@ -554,27 +605,50 @@
 
   <!-- main.container removed -->
 
+<div class="modal" id="workItemModal" role="dialog" aria-modal="true" aria-labelledby="workItemModalTitle">
+  <div class="modal-content wide">
+    <h2 id="workItemModalTitle">Edit work item</h2>
+    <div class="workflow-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+      <div class="field"><label for="workItemGroup">Group</label><select id="workItemGroup"></select></div>
+      <div class="field" id="workItemParentWrap"><label for="workItemParentEpic">Parent EPIC</label><select id="workItemParentEpic"></select></div>
+      <div class="field" id="workItemNewEpicWrap" style="display:none"><label for="workItemNewEpicTitle">New EPIC title</label><input id="workItemNewEpicTitle" type="text" placeholder="Enter EPIC title" /></div>
+      <div class="field" style="grid-column:1 / -1"><label for="workItemTitle">Title</label><input id="workItemTitle" type="text" /></div>
+      <div class="field"><label for="workItemPoints">Story points</label><input id="workItemPoints" type="number" min="0" /></div>
+      <div class="field"><label for="workItemPriority">Priority</label><select id="workItemPriority"></select></div>
+      <div class="field"><label for="workItemTeam">Team</label><select id="workItemTeam"></select></div>
+      <div class="field"><label for="workItemAssignee">Assignee</label><input id="workItemAssignee" type="text" /></div>
+      <div class="field" style="grid-column:1 / -1"><label for="workItemCriteria">Acceptance criteria</label><textarea id="workItemCriteria" rows="5" placeholder="One AC per line"></textarea></div>
+      <div class="field" style="grid-column:1 / -1"><label for="workItemReferences">Documents or links</label><textarea id="workItemReferences" rows="3" placeholder="One link or document reference per line"></textarea></div>
+      <div class="field" style="grid-column:1 / -1"><label for="workItemFiles">Attach document metadata</label><input id="workItemFiles" type="file" multiple /></div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn ghost" id="cancelWorkItemBtn">Cancel</button>
+      <button type="button" class="btn" id="saveWorkItemBtn">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="toolInfoModal" role="dialog" aria-modal="true" aria-labelledby="toolInfoTitle">
   <div class="modal-content tool-modal-content">
     <h2 id="toolInfoTitle">About Planning Assistant</h2>
-    <p class="muted-text">A lightweight workspace for product area leads who currently stitch quarterly planning together in Excel, inboxes, Jira exports, and follow-up meetings.</p>
+    <p class="muted-text">An AI-assisted workspace that connects Jira Align planning intent with Jira delivery data so product area leads do not have to manually stitch together exports, inbox context, capacity spreadsheets, and expert judgement.</p>
     <div class="workflow-panel">
-      <h4>What this tool helps you do</h4>
+      <h4>Jira and Jira Align connected flow</h4>
       <ul>
-        <li>Collect carryover work, new functional intake, C&amp;M work, and quality work in one place.</li>
-        <li>Size epics and stories, assign them to teams, and keep the same allocation visible through planning and JIRA publishing.</li>
-        <li>Compare planned story points against PR-level and team-level capacity after holidays, L&amp;D, PTO, and other unavailable time.</li>
-        <li>See whether the plan fits discretionary, C&amp;M, and quality allocation targets before committing the quarter.</li>
-        <li>Prepare a clear publish list for Jira, including carryover items that should update existing work instead of feeling like new scope.</li>
+        <li>Fetch carryover stories and epics from Jira/Jira Align so existing work is treated as UPDATE, not accidental new scope.</li>
+        <li>Use Jira velocity and team history as the starting point for capacity, then adjust for holidays, L&amp;D, PTO, and other unavailable time.</li>
+        <li>Keep Jira Align allocation intent visible through sizing, team fit, prioritization, and final Jira publishing.</li>
+        <li>Prepare a final publish list where every row is clearly a Jira CREATE or UPDATE decision.</li>
       </ul>
     </div>
     <div class="workflow-panel">
-      <h4>How to use it</h4>
+      <h4>Where AI bridges the manual gaps</h4>
       <ul>
-        <li>Start on Work Intake: confirm velocity, unavailable time, allocation targets, and submit any new functional intake notes or links.</li>
-        <li>Use High Level Sizing to review epics/stories, update points, and assign the owning team and person.</li>
-        <li>Use Capacity Check to validate fit at PR level and team level before publishing.</li>
-        <li>Use Publish to JIRA to select exactly which epics and stories should be created or updated.</li>
+        <li>Turns intake notes, transcripts, and links into suggested epics, stories, and acceptance criteria.</li>
+        <li>Suggests story points using scope, acceptance criteria, dependency, and historical delivery signals.</li>
+        <li>Suggests low-level design considerations that help teams decide low-level sizing with less back-and-forth.</li>
+        <li>Suggests priority based on story relationships, dependencies, blockers, risk, and business value.</li>
+        <li>Highlights allocation and capacity gaps that normally require a senior planning expert to detect manually.</li>
       </ul>
     </div>
     <div class="modal-actions">
@@ -636,11 +710,7 @@ const squads = {
     teamAvgVelocity: 19,
     people: [
       {name:"Subrahmanya", role:"Lead Engineer", holidays:2, velocity:21, capacity:28},
-      {name:"Sahajanya", role:"Senior Engineer", holidays:2, velocity:19, capacity:25},
-      {name:"Prasad", role:"Engineer", holidays:1, velocity:17, capacity:23},
-      {name:"Varun", role:"Engineer", holidays:2, velocity:18, capacity:24},
-      {name:"Vinod", role:"Tech Lead", holidays:1, velocity:20, capacity:27},
-      {name:"Harshada", role:"Engineer", holidays:2, velocity:16, capacity:21}
+      {name:"Abhinava", role:"Senior Engineer", holidays:2, velocity:19, capacity:25}
     ]
   },
   "Sindhu": {
@@ -648,12 +718,53 @@ const squads = {
     board: "SINDHU",
     teamAvgVelocity: 20,
     people: [
-      {name:"Anika", role:"Lead Engineer", holidays:1, velocity:22, capacity:29},
-      {name:"Rohit", role:"Senior Engineer", holidays:2, velocity:20, capacity:26},
-      {name:"Meera", role:"Engineer", holidays:2, velocity:18, capacity:24},
-      {name:"Karthik", role:"Engineer", holidays:1, velocity:19, capacity:25},
-      {name:"Ishaan", role:"Tech Lead", holidays:1, velocity:21, capacity:28},
-      {name:"Diya", role:"Engineer", holidays:2, velocity:17, capacity:22}
+      {name:"Prasad", role:"Lead Engineer", holidays:1, velocity:22, capacity:29},
+      {name:"Sahajanya", role:"Senior Engineer", holidays:2, velocity:20, capacity:26}
+    ]
+  },
+  "Corrib": {
+    productArea: "Corrib Product Area",
+    board: "CORRIB",
+    teamAvgVelocity: 18,
+    people: [
+      {name:"Vinod", role:"Lead Engineer", holidays:1, velocity:20, capacity:27},
+      {name:"Varun", role:"Engineer", holidays:2, velocity:18, capacity:24}
+    ]
+  },
+  "Hudson": {
+    productArea: "Hudson Product Area",
+    board: "HUDSON",
+    teamAvgVelocity: 17,
+    people: [
+      {name:"Anil", role:"Lead Engineer", holidays:1, velocity:19, capacity:25},
+      {name:"Harsha", role:"Engineer", holidays:2, velocity:17, capacity:23}
+    ]
+  },
+  "Potomac": {
+    productArea: "Potomac Product Area",
+    board: "POTOMAC",
+    teamAvgVelocity: 16,
+    people: [
+      {name:"Chandra", role:"Lead Engineer", holidays:1, velocity:18, capacity:24},
+      {name:"Praveen", role:"Engineer", holidays:2, velocity:16, capacity:22}
+    ]
+  },
+  "Niagara": {
+    productArea: "Niagara Product Area",
+    board: "NIAGARA",
+    teamAvgVelocity: 21,
+    people: [
+      {name:"Venkat", role:"Lead Engineer", holidays:1, velocity:22, capacity:29},
+      {name:"Shreya", role:"Engineer", holidays:2, velocity:20, capacity:26}
+    ]
+  },
+  "Shannon": {
+    productArea: "Shannon Product Area",
+    board: "SHANNON",
+    teamAvgVelocity: 18,
+    people: [
+      {name:"Prateek", role:"Lead Engineer", holidays:1, velocity:19, capacity:25},
+      {name:"Shravasth", role:"Engineer", holidays:2, velocity:17, capacity:23}
     ]
   }
 };
@@ -731,15 +842,15 @@ const state = {
 };
 
 const quarterWeeks = { Q1: 13, Q2: 13, Q3: 13, Q4: 13 };
-const planningTeams = ['Indus','Sindhu','Corrib','Hudson','Niagara','Potomac','Shannon'];
+const planningTeams = ['Indus','Sindhu','Corrib','Hudson','Potomac','Niagara','Shannon'];
 const teamAssignees = {
-  Indus: ['Subrahmanya','Sahajanya','Prasad'],
-  Sindhu: ['Anika','Rohit','Meera'],
-  Corrib: ['Niamh','Aidan','Riya'],
-  Hudson: ['Maya','Ethan','Noah'],
-  Niagara: ['Olivia','Liam','Ava'],
-  Potomac: ['Arjun','Isha','Dev'],
-  Shannon: ['Sofia','Kabir','Leah']
+  Indus: ['Subrahmanya','Abhinava'],
+  Sindhu: ['Prasad','Sahajanya'],
+  Corrib: ['Vinod','Varun'],
+  Hudson: ['Anil','Harsha'],
+  Potomac: ['Chandra','Praveen'],
+  Niagara: ['Venkat','Shreya'],
+  Shannon: ['Prateek','Shravasth']
 };
 const priorityOptions = ['P1','P2','P3','P4','P5','P6'];
 function getSprintCount(quarter){ return (quarterWeeks[quarter] || 13) / 2; }
@@ -804,12 +915,15 @@ const page2GroupFiles = [
 ];
 
 let page2GroupData = { carryover: [], discretionary: [], cm: [], quality: [] };
-let selectedPage2Group = null;
+let selectedPage2Group = 'carryover';
 let selectedCombinedGroup = 'all';
 let jiraPublished = false;
 let selectedJiraItems = {};
 let page1IntakeSubmitted = false;
 let page1Attachments = [];
+let planningContextApplied = false;
+let activeWorkItemModal = null;
+const planningDraftKey = 'planning-assistant-draft-v1';
 
 const embeddedTextFiles = {
   'carryover.txt': `Epic: Customer intake reconciliation
@@ -958,6 +1072,27 @@ function defaultAssigneeForTeam(team, index){
   return assignees[index % assignees.length];
 }
 
+function applyEpicTeamToStories(epic){
+  if(!epic) return;
+  const fallbackTeam = epic.team || (epic.stories[0] && epic.stories[0].team) || 'Indus';
+  epic.team = fallbackTeam;
+  if(!epic.assignee || !(teamAssignees[epic.team] || []).includes(epic.assignee)){
+    epic.assignee = defaultAssigneeForTeam(epic.team, 0);
+  }
+  epic.stories.forEach((story, storyIndex)=>{
+    story.team = epic.team;
+    if(!story.assignee || !(teamAssignees[epic.team] || []).includes(story.assignee)){
+      story.assignee = defaultAssigneeForTeam(epic.team, storyIndex);
+    }
+  });
+}
+
+function enforceAllEpicStoryTeams(){
+  Object.values(page2GroupData || {}).forEach(epics=>{
+    (epics || []).forEach(applyEpicTeamToStories);
+  });
+}
+
 function teamOptionsHtml(selectedTeam){
   return planningTeams.map(team=>'<option '+(selectedTeam===team?'selected':'')+'>'+team+'</option>').join('');
 }
@@ -973,6 +1108,7 @@ function getTeamGrainCapacity(net, percentages){
 }
 
 function getTeamAssignmentSummary(){
+  enforceAllEpicStoryTeams();
   const summary = {};
   planningTeams.forEach(team=>{ summary[team] = { discretionary:0, cm:0, quality:0, total:0, stories:0 }; });
   getAllWorkItems().filter(item=>item.type === 'Story').forEach(item=>{
@@ -987,6 +1123,7 @@ function getTeamAssignmentSummary(){
 }
 
 function getAllWorkItems(){
+  enforceAllEpicStoryTeams();
   return page2GroupFiles.flatMap(group=>
     (page2GroupData[group.key] || []).flatMap((epic, epicIndex)=>{
       const firstStory = epic.stories[0] || {};
@@ -1001,7 +1138,9 @@ function getAllWorkItems(){
         points: Number(epic.points) || 0,
         priority: epic.priority || 'P3',
         team: epic.team || firstStory.team || defaultTeamForStory(group.key, epicIndex),
-        assignee: epic.assignee || firstStory.assignee || defaultAssigneeForTeam(firstStory.team || defaultTeamForStory(group.key, epicIndex), epicIndex)
+        assignee: epic.assignee || firstStory.assignee || defaultAssigneeForTeam(firstStory.team || defaultTeamForStory(group.key, epicIndex), epicIndex),
+        criteria: epic.criteria || [],
+        references: epic.references || []
       };
       const storyItems = epic.stories.map((story, storyIndex)=>({
         id: group.key+'-story-'+epicIndex+'-'+storyIndex,
@@ -1015,7 +1154,9 @@ function getAllWorkItems(){
         priority: story.priority || 'P3',
         team: story.team || defaultTeamForStory(group.key, storyIndex),
         assignee: story.assignee || defaultAssigneeForTeam(story.team || defaultTeamForStory(group.key, storyIndex), storyIndex),
-        epicTitle: epic.title
+        epicTitle: epic.title,
+        criteria: story.criteria || [],
+        references: story.references || []
       }));
       return [epicItem].concat(storyItems);
     })
@@ -1064,6 +1205,48 @@ function renderPage2SizingTable(){
   const tbody = $('#workflowSizeTableBody');
   if(!tbody) return;
   if(!selectedPage2Group){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--muted)">Select a group to view epics and stories.</td></tr>';
+    $('#workflowStoryPointTotal').textContent = '0';
+    return;
+  }
+  const epics = page2GroupData[selectedPage2Group] || [];
+  if(!epics.length){
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--muted)">No epics loaded for this group.</td></tr>';
+    $('#workflowStoryPointTotal').textContent = '0';
+    return;
+  }
+  enforceAllEpicStoryTeams();
+  tbody.innerHTML = epics.map((epic, epicIndex)=>{
+    const epicRows = [];
+    const epicTeam = epic.team || defaultTeamForStory(selectedPage2Group, epicIndex);
+    epicRows.push(
+      '<tr class="epic-row">' +
+      '<td><strong>'+epic.title+'</strong></td>' +
+      '<td>Epic</td>' +
+      '<td><input type="number" class="epic-point-input" data-epic-index="'+epicIndex+'" value="'+epic.points+'" min="0" /></td>' +
+      '<td><select class="page2-team-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="" data-item-type="Epic">'+teamOptionsHtml(epicTeam)+'</select></td>' +
+      '</tr>'
+    );
+    epic.stories.forEach((story, storyIndex)=>{
+      const storyTeam = story.team || defaultTeamForStory(selectedPage2Group, storyIndex);
+      epicRows.push(
+        '<tr class="story-row">' +
+        '<td style="padding-left:20px">📌 '+story.title+'</td>' +
+        '<td>Story</td>' +
+        '<td><input type="number" class="story-point-input page2-story-point-input" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" value="'+story.points+'" min="0" /></td>' +
+        '<td><select class="page2-team-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story">'+teamOptionsHtml(storyTeam)+'</select></td>' +
+        '</tr>'
+      );
+    });
+    return epicRows.join('');
+  }).join('');
+  updateWorkflowStoryPointTotal();
+}
+
+function renderPage2SizingTable(){
+  const tbody = $('#workflowSizeTableBody');
+  if(!tbody) return;
+  if(!selectedPage2Group){
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">Select a group to view epics and stories.</td></tr>';
     $('#workflowStoryPointTotal').textContent = '0';
     return;
@@ -1077,26 +1260,24 @@ function renderPage2SizingTable(){
   tbody.innerHTML = epics.map((epic, epicIndex)=>{
     const epicRows = [];
     const epicTeam = epic.team || defaultTeamForStory(selectedPage2Group, epicIndex);
-    const epicAssignee = epic.assignee || defaultAssigneeForTeam(epicTeam, epicIndex);
     epicRows.push(
       '<tr class="epic-row">' +
-      '<td><strong>'+epic.title+'</strong></td>' +
+      '<td><strong>'+escapeHtml(epic.title)+'</strong></td>' +
       '<td>Epic</td>' +
       '<td><input type="number" class="epic-point-input" data-epic-index="'+epicIndex+'" value="'+epic.points+'" min="0" /></td>' +
       '<td><select class="page2-team-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="" data-item-type="Epic">'+teamOptionsHtml(epicTeam)+'</select></td>' +
-      '<td><input class="page2-assignee-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="" data-item-type="Epic" value="'+epicAssignee+'" /></td>' +
+      '<td><div class="row-actions"><button type="button" class="btn small ghost work-edit-btn" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="" data-item-type="Epic">Edit</button><button type="button" class="btn small ghost work-add-story-btn" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'">Add story</button><button type="button" class="btn small ghost work-delete-btn" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="" data-item-type="Epic">Delete</button></div></td>' +
       '</tr>'
     );
     epic.stories.forEach((story, storyIndex)=>{
-      const storyTeam = story.team || defaultTeamForStory(selectedPage2Group, storyIndex);
-      const storyAssignee = story.assignee || defaultAssigneeForTeam(storyTeam, storyIndex);
+      const storyTeam = epic.team || story.team || defaultTeamForStory(selectedPage2Group, storyIndex);
       epicRows.push(
         '<tr class="story-row">' +
-        '<td style="padding-left:20px">📌 '+story.title+'</td>' +
+        '<td style="padding-left:20px">Story: '+escapeHtml(story.title)+'</td>' +
         '<td>Story</td>' +
         '<td><input type="number" class="story-point-input page2-story-point-input" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" value="'+story.points+'" min="0" /></td>' +
-        '<td><select class="page2-team-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story">'+teamOptionsHtml(storyTeam)+'</select></td>' +
-        '<td><input class="page2-assignee-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story" value="'+storyAssignee+'" /></td>' +
+        '<td><select class="page2-team-input" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story" disabled title="Inherited from EPIC">'+teamOptionsHtml(storyTeam)+'</select></td>' +
+        '<td><div class="row-actions"><button type="button" class="btn small ghost work-edit-btn" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story">Edit</button><button type="button" class="btn small ghost work-delete-btn" data-group="'+selectedPage2Group+'" data-epic-index="'+epicIndex+'" data-story-index="'+storyIndex+'" data-item-type="Story">Delete</button></div></td>' +
         '</tr>'
       );
     });
@@ -1119,6 +1300,8 @@ function updatePage2Assignment(input){
     if(!target.assignee || !(teamAssignees[target.team] || []).includes(target.assignee)){
       target.assignee = defaultAssigneeForTeam(target.team, storyIndex || epicIndex);
     }
+    if(itemType === 'Epic') applyEpicTeamToStories(epic);
+    if(itemType === 'Story') target.team = epic.team || target.team;
   }
   if(input.classList.contains('page2-assignee-input')){
     target.assignee = input.value.trim() || defaultAssigneeForTeam(target.team || 'Indus', storyIndex || epicIndex);
@@ -1132,6 +1315,10 @@ function updatePage2Assignment(input){
   renderReport();
 }
 
+function cssToken(value){
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
 function renderPage3TeamAllocationTable(){
   const tbody = $('#page3TeamAllocationBody');
   if(!tbody) return;
@@ -1142,15 +1329,17 @@ function renderPage3TeamAllocationTable(){
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">No stories loaded yet.</td></tr>';
     return;
   }
-  tbody.innerHTML = storyItems.map(item=>
-    '<tr>'+
-      '<td><strong>'+item.team+'</strong></td>'+
-      '<td>'+item.groupLabel+'</td>'+
+  tbody.innerHTML = storyItems.map(item=>{
+    const teamClass = cssToken(item.team);
+    const grainClass = cssToken(item.group);
+    return '<tr class="allocation-row team-'+teamClass+'">'+
+      '<td><span class="team-chip '+teamClass+'">'+item.team+'</span></td>'+
+      '<td><span class="grain-chip '+grainClass+'">'+item.groupLabel+'</span></td>'+
       '<td>'+item.epicTitle+'</td>'+
       '<td>'+item.title+'</td>'+
       '<td>'+item.points+'</td>'+
-    '</tr>'
-  ).join('');
+    '</tr>';
+  }).join('');
 }
 
 function normalizePage2Epics(epics, groupKey){
@@ -1160,6 +1349,8 @@ function normalizePage2Epics(epics, groupKey){
       const team = defaultTeamForStory(groupKey, storyCounter);
       const normalized = {
         title: story.title,
+        criteria: story.criteria || [],
+        references: story.references || [],
         points: defaultStoryPoints(groupKey),
         priority: priorityOptions[Math.min(storyCounter, priorityOptions.length - 1)] || 'P6',
         team,
@@ -1173,6 +1364,8 @@ function normalizePage2Epics(epics, groupKey){
     return {
       title: epic.title || 'Untitled Epic',
       stories,
+      criteria: epic.criteria || [],
+      references: epic.references || [],
       points: total,
       priority: priorityOptions[Math.min(epicIndex, priorityOptions.length - 1)] || 'P6',
       team: firstStory.team || defaultTeamForStory(groupKey, epicIndex),
@@ -1183,7 +1376,7 @@ function normalizePage2Epics(epics, groupKey){
 
 function loadPage2GroupFiles(){
   const body = $('#workflowSizeTableBody');
-  if(body) body.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">Loading epics from planning files...</td></tr>';
+  if(body) body.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">Loading carryover items...</td></tr>';
   Promise.all(page2GroupFiles.map(src=>
     loadTextFile(src.file)
       .catch(error=>{ console.warn(error); return ''; })
@@ -1193,12 +1386,14 @@ function loadPage2GroupFiles(){
       const epics = result.text ? parseEpicsFile(result.text) : [];
       page2GroupData[result.key] = normalizePage2Epics(epics, result.key);
     });
+    restorePlanningDraft();
     renderPage2SizingTable();
     renderCombinedGroupButtons();
     renderCombinedWorkTable();
     renderJiraPublishTable();
     renderReport();
     renderWorkIntakeCapacity();
+    setPage2Group(selectedPage2Group || 'carryover');
   });
 }
 
@@ -1256,21 +1451,23 @@ function renderCombinedGroupButtons(){
 function renderCombinedWorkTable(){
   const tbody = $('#combinedWorkTable');
   if(!tbody) return;
+  enforceAllEpicStoryTeams();
   renderCombinedGroupButtons();
   const items = getAllWorkItems().filter(item=>selectedCombinedGroup==='all' || item.group===selectedCombinedGroup);
   if(!items.length){
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:18px;color:var(--muted)">No stories loaded yet. Keep the HTML and text files in the same folder, then reload.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:18px;color:var(--muted)">No stories loaded yet. Keep the HTML and text files in the same folder, then reload.</td></tr>';
     $('#combinedStoryPointTotal').textContent = '0';
     return;
   }
   tbody.innerHTML = items.map(item=>
     '<tr class="'+(item.type==='Epic'?'epic-row':'story-row')+'">'+
-      '<td>'+(item.type==='Story' ? '<span style="padding-left:18px">Story: '+item.title+'</span><div class="muted-text" style="padding-left:18px">Epic: '+item.epicTitle+'</div>' : '<strong>'+item.title+'</strong><div class="muted-text">'+item.groupLabel+'</div>')+'</td>'+
+      '<td>'+(item.type==='Story' ? '<span style="padding-left:18px">Story: '+escapeHtml(item.title)+'</span><div class="muted-text" style="padding-left:18px">Epic: '+escapeHtml(item.epicTitle)+'</div>' : '<strong>'+escapeHtml(item.title)+'</strong><div class="muted-text">'+escapeHtml(item.groupLabel)+'</div>')+'</td>'+
       '<td>'+item.type+'</td>'+
       '<td><input type="number" class="combined-point-input" data-group="'+item.group+'" data-epic-index="'+item.epicIndex+'" data-story-index="'+(item.storyIndex===null?'':item.storyIndex)+'" data-item-type="'+item.type+'" value="'+item.points+'" min="0" /></td>'+
       '<td><select class="combined-priority-input" data-group="'+item.group+'" data-epic-index="'+item.epicIndex+'" data-story-index="'+(item.storyIndex===null?'':item.storyIndex)+'" data-item-type="'+item.type+'">'+
         priorityOptions.map(priority=>'<option '+(item.priority===priority?'selected':'')+'>'+priority+'</option>').join('')+
       '</select></td>'+
+      '<td><div class="row-actions"><button type="button" class="btn small ghost work-edit-btn" data-group="'+item.group+'" data-epic-index="'+item.epicIndex+'" data-story-index="'+(item.storyIndex===null?'':item.storyIndex)+'" data-item-type="'+item.type+'">Edit</button><button type="button" class="btn small ghost work-delete-btn" data-group="'+item.group+'" data-epic-index="'+item.epicIndex+'" data-story-index="'+(item.storyIndex===null?'':item.storyIndex)+'" data-item-type="'+item.type+'">Delete</button></div></td>'+
     '</tr>'
   ).join('');
   const storyTotal = items.filter(item=>item.type==='Story').reduce((sum,item)=>sum+item.points,0);
@@ -1304,6 +1501,162 @@ function updateCombinedItem(input){
   renderWorkIntakeCapacity();
 }
 
+function splitTextareaLines(value){
+  return String(value || '').split(/\r?\n/).map(line=>line.trim()).filter(Boolean);
+}
+
+function getWorkItemTarget(group, epicIndex, storyIndex, itemType){
+  const epic = (page2GroupData[group] || [])[epicIndex];
+  if(!epic) return null;
+  if(itemType === 'Story' && storyIndex !== null && storyIndex !== ''){
+    return { epic, target: epic.stories[Number(storyIndex)], itemType: 'Story' };
+  }
+  return { epic, target: epic, itemType: 'Epic' };
+}
+
+function refreshPlanningViews(){
+  enforceAllEpicStoryTeams();
+  renderPage2SizingTable();
+  renderCombinedWorkTable();
+  renderTeamCapacityCards();
+  renderJiraPublishTable();
+  renderReport();
+  renderWorkIntakeCapacity();
+}
+
+function deleteWorkItem(context){
+  const group = context.group;
+  const epicIndex = Number(context.epicIndex);
+  const storyIndex = context.storyIndex === '' || context.storyIndex === null || context.storyIndex === undefined ? null : Number(context.storyIndex);
+  const itemType = context.itemType;
+  const epics = page2GroupData[group] || [];
+  const epic = epics[epicIndex];
+  if(!epic) return;
+  const label = itemType === 'Story' && storyIndex !== null && epic.stories[storyIndex]
+    ? 'story "'+epic.stories[storyIndex].title+'"'
+    : 'EPIC "'+epic.title+'" and all of its stories';
+  if(!window.confirm('Delete '+label+'?')) return;
+  if(itemType === 'Story' && storyIndex !== null){
+    epic.stories.splice(storyIndex, 1);
+    epic.points = epic.stories.reduce((sum, story)=>sum + (Number(story.points)||0), 0);
+  } else {
+    epics.splice(epicIndex, 1);
+  }
+  selectedJiraItems = {};
+  jiraPublished = false;
+  refreshPlanningViews();
+}
+
+function populateWorkItemModalLists(group, selectedEpicIndex){
+  $('#workItemGroup').innerHTML = page2GroupFiles.map(item=>'<option value="'+item.key+'" '+(item.key===group?'selected':'')+'>'+item.label+'</option>').join('');
+  $('#workItemPriority').innerHTML = priorityOptions.map(priority=>'<option>'+priority+'</option>').join('');
+  $('#workItemTeam').innerHTML = planningTeams.map(team=>'<option>'+team+'</option>').join('');
+  const epics = page2GroupData[group] || [];
+  $('#workItemParentEpic').innerHTML = epics.map((epic, index)=>'<option value="'+index+'" '+(Number(selectedEpicIndex)===index?'selected':'')+'>'+escapeHtml(epic.title)+'</option>').join('')+
+    '<option value="__new__">New EPIC</option>';
+}
+
+function updateWorkItemModalParentVisibility(){
+  const isStory = activeWorkItemModal && activeWorkItemModal.mode === 'addStory';
+  const parentValue = $('#workItemParentEpic').value;
+  $('#workItemParentWrap').style.display = isStory ? '' : 'none';
+  $('#workItemNewEpicWrap').style.display = isStory && parentValue === '__new__' ? '' : 'none';
+}
+
+function openWorkItemModal(mode, context){
+  const group = context.group || selectedPage2Group || 'carryover';
+  const epicIndex = context.epicIndex === undefined ? 0 : Number(context.epicIndex);
+  const storyIndex = context.storyIndex === undefined || context.storyIndex === '' ? null : Number(context.storyIndex);
+  const itemType = context.itemType || (mode === 'addEpic' ? 'Epic' : 'Story');
+  activeWorkItemModal = { mode, group, epicIndex, storyIndex, itemType };
+  populateWorkItemModalLists(group, epicIndex);
+  $('#workItemFiles').value = '';
+  $('#workItemNewEpicTitle').value = '';
+  const targetInfo = mode === 'edit' ? getWorkItemTarget(group, epicIndex, storyIndex, itemType) : null;
+  const target = targetInfo ? targetInfo.target : {};
+  $('#workItemModalTitle').textContent = mode === 'addEpic' ? 'Add EPIC' : mode === 'addStory' ? 'Add story' : 'Edit '+itemType;
+  $('#workItemTitle').value = target.title || '';
+  $('#workItemPoints').value = target.points || defaultStoryPoints(group);
+  $('#workItemPriority').value = target.priority || 'P3';
+  $('#workItemTeam').value = target.team || defaultTeamForStory(group, epicIndex || 0);
+  $('#workItemAssignee').value = target.assignee || defaultAssigneeForTeam($('#workItemTeam').value, storyIndex || epicIndex || 0);
+  $('#workItemCriteria').value = (target.criteria || []).join('\n');
+  $('#workItemReferences').value = (target.references || []).join('\n');
+  $('#workItemGroup').disabled = mode === 'edit';
+  $('#workItemParentEpic').disabled = mode !== 'addStory';
+  if(mode === 'addStory') $('#workItemParentEpic').value = Number.isInteger(epicIndex) && (page2GroupData[group] || [])[epicIndex] ? String(epicIndex) : '__new__';
+  updateWorkItemModalParentVisibility();
+  $('#workItemModal').classList.add('show');
+}
+
+function closeWorkItemModal(){
+  $('#workItemModal').classList.remove('show');
+  activeWorkItemModal = null;
+}
+
+function saveWorkItemModal(){
+  if(!activeWorkItemModal) return;
+  const mode = activeWorkItemModal.mode;
+  const group = $('#workItemGroup').value;
+  const title = $('#workItemTitle').value.trim();
+  const points = Number($('#workItemPoints').value) || 0;
+  const team = $('#workItemTeam').value;
+  const files = Array.from($('#workItemFiles')?.files || []).map(file=>file.name);
+  const references = splitTextareaLines($('#workItemReferences').value).concat(files);
+  const values = {
+    title,
+    points,
+    priority: $('#workItemPriority').value,
+    team,
+    assignee: $('#workItemAssignee').value.trim() || defaultAssigneeForTeam(team, 0),
+    criteria: splitTextareaLines($('#workItemCriteria').value),
+    references
+  };
+  if(!title){
+    alert('Please enter a title before saving.');
+    return;
+  }
+  if(mode === 'addEpic'){
+    page2GroupData[group].push({ ...values, stories: [] });
+    selectedPage2Group = group;
+  } else if(mode === 'addStory'){
+    let epicIndex = $('#workItemParentEpic').value;
+    if(epicIndex === '__new__'){
+      const epicTitle = $('#workItemNewEpicTitle').value.trim();
+      if(!epicTitle){
+        alert('Please enter the new EPIC title.');
+        return;
+      }
+      page2GroupData[group].push({
+        title: epicTitle,
+        points,
+        priority: values.priority,
+        team: values.team,
+        assignee: values.assignee,
+        criteria: [],
+        references: [],
+        stories: []
+      });
+      epicIndex = page2GroupData[group].length - 1;
+    } else {
+      epicIndex = Number(epicIndex);
+    }
+    page2GroupData[group][epicIndex].stories.push(values);
+    page2GroupData[group][epicIndex].points = page2GroupData[group][epicIndex].stories.reduce((sum, story)=>sum + (Number(story.points)||0), 0);
+    selectedPage2Group = group;
+  } else {
+    const info = getWorkItemTarget(activeWorkItemModal.group, activeWorkItemModal.epicIndex, activeWorkItemModal.storyIndex, activeWorkItemModal.itemType);
+    if(!info || !info.target) return;
+    Object.assign(info.target, values);
+    if(info.itemType === 'Story'){
+      info.epic.points = info.epic.stories.reduce((sum, story)=>sum + (Number(story.points)||0), 0);
+    }
+  }
+  jiraPublished = false;
+  closeWorkItemModal();
+  refreshPlanningViews();
+}
+
 function distributeCombinedEpicPoints(epic, totalPoints){
   epic.points = totalPoints;
   const storyCount = epic.stories.length;
@@ -1329,10 +1682,12 @@ function renderJiraPublishTable(){
     const isSelected = selectedJiraItems[item.id];
     const isCarryover = item.group === 'carryover';
     const prefix = isCarryover ? 'UPDATE' : item.group.toUpperCase().replace(/[^A-Z]/g,'').slice(0,4);
+    const actionLabel = isCarryover ? 'UPDATE' : 'CREATE';
+    const actionClass = isCarryover ? 'update' : 'create';
     const jiraKey = 'https://jira.example.com/browse/'+prefix+'-'+(100 + item.epicIndex + 1)+(item.storyIndex===null?'':'-'+(item.storyIndex + 1));
     return '<tr class="'+(isCarryover?'jira-row-carryover':'')+'">'+
       '<td><input type="checkbox" class="jira-create-input" data-item-id="'+item.id+'" '+(isSelected?'checked':'')+' /></td>'+
-      '<td>'+item.title+(isCarryover?'<span class="carryover-chip">Carryover update</span>':'')+'</td>'+
+      '<td>'+item.title+'<span class="action-chip '+actionClass+'">'+actionLabel+'</span>'+(isCarryover?'<span class="carryover-chip">Carryover update</span>':'')+'</td>'+
       '<td>'+item.groupLabel+'</td>'+
       '<td>'+item.type+'</td>'+
       '<td><select class="jira-team-input" data-group="'+item.group+'" data-epic-index="'+item.epicIndex+'" data-story-index="'+(item.storyIndex===null?'':item.storyIndex)+'" data-item-type="'+item.type+'">'+teamOptionsHtml(item.team)+'</select></td>'+
@@ -1357,6 +1712,8 @@ function updateJiraField(input){
     if(!target.assignee || !(teamAssignees[target.team] || []).includes(target.assignee)){
       target.assignee = defaultAssigneeForTeam(target.team, storyIndex || epicIndex);
     }
+    if(itemType === 'Epic') applyEpicTeamToStories(epic);
+    if(itemType === 'Story') target.team = epic.team || target.team;
   }
   if(input.classList.contains('jira-assignee-input')){
     target.assignee = input.value.trim() || defaultAssigneeForTeam(target.team || 'Indus', storyIndex || epicIndex);
@@ -1504,6 +1861,13 @@ function updatePage1AttachmentStatus(){
   }
 }
 
+function formatFileSize(bytes){
+  const size = Number(bytes) || 0;
+  if(size >= 1024 * 1024) return (size / (1024 * 1024)).toFixed(1)+' MB';
+  if(size >= 1024) return Math.round(size / 1024)+' KB';
+  return size+' B';
+}
+
 function renderPage1AttachmentList(){
   const list = $('#attachmentList');
   if(!list) return;
@@ -1513,7 +1877,9 @@ function renderPage1AttachmentList(){
   }
   list.innerHTML = page1Attachments.map(item=>
     '<div class="attachment-item"><strong>'+escapeHtml(item.type)+' - '+escapeHtml(item.title)+'</strong>'+
-    '<div>'+escapeHtml(item.comment || 'No comment added')+'</div><div class="muted-text">'+escapeHtml(item.date)+'</div></div>'
+    '<div>'+escapeHtml(item.comment || 'No comment added')+'</div>'+
+    (item.files && item.files.length ? '<div class="attachment-files">'+item.files.map(file=>'<span class="attachment-file">'+escapeHtml(file.name)+' ('+escapeHtml(formatFileSize(file.size))+')</span>').join('')+'</div>' : '')+
+    '<div class="muted-text">'+escapeHtml(item.date)+'</div></div>'
   ).join('');
 }
 
@@ -1522,17 +1888,19 @@ function submitPage1Intake(){
   const title = $('#attachTitle').value.trim();
   const comment = $('#attachComment').value.trim();
   const date = $('#attachDate').value;
-  if(!title){
-    alert('Please enter a title or URL for the intake attachment.');
+  const files = Array.from($('#attachFile')?.files || []).map(file=>({ name: file.name, size: file.size, type: file.type || 'file' }));
+  if(!title && !files.length){
+    alert('Please enter a title/URL or upload at least one intake attachment.');
     return;
   }
-  page1Attachments.push({ type, title, comment, date: date || 'No date' });
+  page1Attachments.push({ type, title: title || files.map(file=>file.name).join(', '), comment, date: date || 'No date', files });
   page1IntakeSubmitted = true;
   renderPage1AttachmentList();
   updatePage1AttachmentStatus();
   $('#attachTitle').value = '';
   $('#attachComment').value = '';
   $('#attachDate').value = '';
+  $('#attachFile').value = '';
 }
 
 function loadTreeContent(type){
@@ -1566,6 +1934,126 @@ function updateContextLabel(){
   if($('#overviewBadge')) $('#overviewBadge').textContent = lbl;
   if($('#ovTeams')) $('#ovTeams').textContent = String(Object.keys(squads).length);
   renderWorkIntakeCapacity();
+}
+
+function setPlanningFlowVisible(isVisible){
+  planningContextApplied = isVisible;
+  const shell = $('.workflow-shell');
+  const reportButton = $('#viewReportBtn');
+  const resetButton = $('#resetPlanBtn');
+  if(shell) shell.classList.toggle('app-hidden', !isVisible);
+  if(reportButton) reportButton.classList.toggle('app-hidden', !isVisible);
+  if(resetButton) resetButton.classList.toggle('app-hidden', !isVisible);
+  if(!isVisible && $('#reportPanel')) $('#reportPanel').classList.remove('show');
+}
+
+function markPlanningContextPending(){
+  if(!planningContextApplied) return;
+  setPlanningFlowVisible(false);
+  $('#ctxLabel').textContent = 'Apply the updated PR, quarter, and fiscal year to continue.';
+}
+
+function applyPlanningContext(){
+  const pr = $('#prId').value.trim();
+  const q = $('#quarter').value;
+  const fy = $('#fy').value;
+  if(!pr || !q || !fy){
+    setPlanningFlowVisible(false);
+    $('#ctxLabel').textContent = 'Enter PR, quarter, and fiscal year to start.';
+    alert('Please enter PR ID, quarter, and fiscal year before starting the planning flow.');
+    return;
+  }
+  $('#prId').value = pr;
+  setPlanningFlowVisible(true);
+  updateContextLabel();
+  renderQuarterlyDash();
+  renderWorkIntakeSummary();
+  setActiveWorkflowStep(1);
+}
+
+function savePlanningDraft(showAlert=true){
+  const draft = {
+    prId: $('#prId').value,
+    quarter: $('#quarter').value,
+    fy: $('#fy').value,
+    selectedPage2Group,
+    selectedCombinedGroup,
+    currentStep: getCurrentWorkflowStep(),
+    planningContextApplied,
+    page2GroupData,
+    selectedJiraItems,
+    jiraPublished,
+    page1IntakeSubmitted,
+    page1Attachments,
+    page1Fields: {
+      orgHolidays: $('#orgHolidays')?.value,
+      ldTime: $('#ldTime')?.value,
+      ptoTime: $('#ptoTime')?.value,
+      otherUnavailability: $('#otherUnavailability')?.value,
+      discPercent: $('#discPercent')?.value,
+      nonDiscPercent: $('#nonDiscPercent')?.value,
+      cmPercent: $('#cmPercent')?.value,
+      qualityPercent: $('#qualityPercent')?.value,
+      teamVelocities: Array.from($$('.team-velocity-input')).map(input=>({ team: input.dataset.team, value: input.value }))
+    }
+  };
+  try{
+    localStorage.setItem(planningDraftKey, JSON.stringify(draft));
+    if(showAlert) alert('Plan saved. You can come back to this browser and continue later.');
+  } catch(error){
+    console.warn(error);
+    alert('Unable to save this plan in browser storage.');
+  }
+}
+
+function resetPlanningDraft(){
+  const shouldReset = window.confirm('Start a new plan? This clears the saved browser draft and returns to the initial view.');
+  if(!shouldReset) return;
+  try{
+    localStorage.removeItem(planningDraftKey);
+  } catch(error){
+    console.warn(error);
+  }
+  window.location.reload();
+}
+
+function restorePlanningDraft(){
+  let draft = null;
+  try{
+    draft = JSON.parse(localStorage.getItem(planningDraftKey) || 'null');
+  } catch(error){
+    console.warn(error);
+  }
+  if(!draft) return false;
+  if(draft.prId !== undefined) $('#prId').value = draft.prId;
+  if(draft.quarter !== undefined) $('#quarter').value = draft.quarter;
+  if(draft.fy !== undefined) $('#fy').value = draft.fy;
+  if(draft.page1Fields){
+    Object.entries(draft.page1Fields).forEach(([key,value])=>{
+      if(key === 'teamVelocities') return;
+      const el = $('#'+key);
+      if(el && value !== undefined) el.value = value;
+    });
+    (draft.page1Fields.teamVelocities || []).forEach(row=>{
+      const input = document.querySelector('.team-velocity-input[data-team="'+row.team+'"]');
+      if(input) input.value = row.value;
+    });
+  }
+  if(draft.page2GroupData) page2GroupData = draft.page2GroupData;
+  selectedPage2Group = draft.selectedPage2Group || selectedPage2Group;
+  selectedCombinedGroup = draft.selectedCombinedGroup || selectedCombinedGroup;
+  selectedJiraItems = draft.selectedJiraItems || {};
+  jiraPublished = Boolean(draft.jiraPublished);
+  page1IntakeSubmitted = Boolean(draft.page1IntakeSubmitted);
+  page1Attachments = draft.page1Attachments || [];
+  setPlanningFlowVisible(Boolean(draft.planningContextApplied));
+  updateContextLabel();
+  renderPage1AttachmentList();
+  updatePage1AttachmentStatus();
+  setPage2Group(selectedPage2Group);
+  refreshPlanningViews();
+  if(draft.currentStep) setActiveWorkflowStep(draft.currentStep);
+  return true;
 }
 
 function refreshTeamData(){
@@ -1786,6 +2274,24 @@ document.addEventListener('click', event=>{
   if(groupButton){ setPage2Group(groupButton.dataset.group); return; }
   const combinedButton = event.target.closest('.combined-group-btn');
   if(combinedButton){ selectedCombinedGroup = combinedButton.dataset.group; renderCombinedWorkTable(); return; }
+  const saveButton = event.target.closest('.save-plan-btn');
+  if(saveButton){ savePlanningDraft(); return; }
+  const editButton = event.target.closest('.work-edit-btn');
+  if(editButton){
+    openWorkItemModal('edit', {
+      group: editButton.dataset.group,
+      epicIndex: editButton.dataset.epicIndex,
+      storyIndex: editButton.dataset.storyIndex,
+      itemType: editButton.dataset.itemType
+    });
+    return;
+  }
+  const addStoryButton = event.target.closest('.work-add-story-btn');
+  if(addStoryButton){
+    openWorkItemModal('addStory', { group: addStoryButton.dataset.group, epicIndex: addStoryButton.dataset.epicIndex });
+    return;
+  }
+  if(event.target.id === 'workItemModal'){ closeWorkItemModal(); return; }
   if(event.target.classList.contains('modal')) event.target.classList.remove('show');
   if(event.target.id === 'reportPanel') event.target.classList.remove('show');
 });
@@ -1815,6 +2321,12 @@ document.addEventListener('input', event=>{
 document.addEventListener('change', event=>{
   if(event.target.classList.contains('page2-team-input') || event.target.classList.contains('page2-assignee-input')) updatePage2Assignment(event.target);
   if(event.target.classList.contains('jira-team-input') || event.target.classList.contains('jira-assignee-input')) updateJiraField(event.target);
+  if(event.target.matches('#workItemGroup')){
+    populateWorkItemModalLists(event.target.value, 0);
+    $('#workItemTeam').innerHTML = planningTeams.map(team=>'<option>'+team+'</option>').join('');
+    updateWorkItemModalParentVisibility();
+  }
+  if(event.target.matches('#workItemParentEpic')) updateWorkItemModalParentVisibility();
   if(event.target.classList.contains('jira-create-input')){
     selectedJiraItems[event.target.dataset.itemId] = event.target.checked;
     jiraPublished = false;
@@ -1824,7 +2336,12 @@ document.addEventListener('change', event=>{
 });
 
 on('#attachSubmitBtn', 'click', submitPage1Intake);
+on('#addPage2EpicBtn', 'click', ()=>openWorkItemModal('addEpic', { group: selectedPage2Group }));
+on('#addPage2StoryBtn', 'click', ()=>openWorkItemModal('addStory', { group: selectedPage2Group, epicIndex: 0 }));
+on('#cancelWorkItemBtn', 'click', closeWorkItemModal);
+on('#saveWorkItemBtn', 'click', saveWorkItemModal);
 on('#viewReportBtn', 'click', ()=>{
+  if(!planningContextApplied) return;
   renderReport();
   $('#reportPanel').classList.add('show');
 });
@@ -1848,8 +2365,11 @@ on('#addCarryItemBtn', 'click', ()=>{
   renderWorkIntakeCapacity();
 });
 
-on('#applyContext', 'click', ()=>{ updateContextLabel(); renderQuarterlyDash(); renderWorkIntakeSummary(); });
-on('#quarter', 'change', ()=>{ updateContextLabel(); renderQuarterlyDash(); renderWorkIntakeSummary(); });
+on('#applyContext', 'click', applyPlanningContext);
+on('#resetPlanBtn', 'click', resetPlanningDraft);
+on('#prId', 'input', markPlanningContextPending);
+on('#quarter', 'change', markPlanningContextPending);
+on('#fy', 'change', markPlanningContextPending);
 on('#squad', 'change', refreshTeamData);
 
 on('#addSourceBtn', 'click', ()=>{
@@ -1895,7 +2415,7 @@ if($('#squad')) $('#squad').value='Indus';
 refreshTeamData();
 renderSources();
 renderProposed();
-updateContextLabel();
+setPlanningFlowVisible(false);
 renderWorkIntakeSummary();
 renderPage1AttachmentList();
 updatePage1AttachmentStatus();
